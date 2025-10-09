@@ -1063,22 +1063,4 @@ if PlayerTab then
     PlayerTab._frame.Visible = true
     UI._activeTab = "PlayerTab"
 end
-
--- 2.1 Logo Loading
-local Logo = Instance.new("ImageLabel", ScreenGui)
-Logo.Size = UDim2.new(0, 200, 0, 200)
-Logo.Position = UDim2.new(0.5, -100, 0.5, -100)
-Logo.BackgroundTransparency = 1
-Logo.Image = "rbxassetid://81450116624685"
-Logo.ImageTransparency = 1
-
-local tweenInfoFade = TweenInfo.new(1.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-TweenService:Create(Logo, tweenInfoFade, {ImageTransparency = 0}):Play()
-Logo.Size = UDim2.new(0, 50, 0, 50)
-TweenService:Create(Logo, TweenInfo.new(1.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(0, 200, 0, 200)}):Play()
-
--- Setelah loading, tampilkan KeyFrame (BUKAN MainFrame)
-task.delay(3, function()
-    Logo:Destroy()
-    
 _G.YuviHubUI = UI
