@@ -1010,13 +1010,6 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
     end
 end)
 
-function UI:createTabs(...)
-    local names = {...}
-    for _,n in ipairs(names) do
-        self:createTab(n)
-    end
-end
-
 local Logo = Instance.new("ImageLabel", ScreenGui)
 Logo.Size = UDim2.new(0, 200, 0, 200)
 Logo.Position = UDim2.new(0.5, -100, 0.5, -100)
