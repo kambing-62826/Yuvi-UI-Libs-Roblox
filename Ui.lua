@@ -82,7 +82,7 @@ local function makeResizable(frame, resizeHandle)
             resizing = true
             startPos = input.Position
             frameSize = frame.Size
-            UserInputService.MouseBehavior = Enum.MouseBehavior.Exclusive
+            UserInputService.MouseBehavior = Enum.MouseBehavior.LockCenter
         end
     end
 
@@ -1085,9 +1085,9 @@ end)
 
 RunService.RenderStepped:Connect(function()
     if not UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) then
-        if UserInputService.MouseBehavior == Enum.MouseBehavior.Exclusive then
-            UserInputService.MouseBehavior = Enum.MouseBehavior.Default
-        end
+            if UserInputService.MouseBehavior == Enum.MouseBehavior.LockCenter then
+                UserInputService.MouseBehavior = Enum.MouseBehavior.Default
+            end
         
         local mouse = game.Players.LocalPlayer:GetMouse()
         local isOverHandle = (mouse.Target == ResizeHandle)
