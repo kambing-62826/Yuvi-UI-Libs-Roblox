@@ -42,33 +42,3 @@ MyTab:createKeybind("Example", Enum.KeyCode.H, function()
     ExampleToggle:Set(not ExampleToggle:Get())
 end, 1) -- kolom kiri
 
--- Fungsi ini untuk membuat logo opening, ubah ID dan ganti dengan ID kamu 
--- NOTE : ( JIKA INGIN MEMAKAI LOGO OPENING, TARUH KODE INI DI PALING AKHIR SETELAH KAMU MEMBUAT SEMUA CONTENT DAN FITUR TABS )
-local Logo = Instance.new("ImageLabel", ScreenGui)
-Logo.Size = UDim2.new(0, 200, 0, 200)
-Logo.Position = UDim2.new(0.5, -100, 0.5, -100)
-Logo.BackgroundTransparency = 1
-Logo.Image = "rbxassetid://81450116624685" -- ubah ID ini dengan ID kamu
-Logo.ImageTransparency = 1
-
-local tweenInfoFade = TweenInfo.new(1.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-TweenService:Create(Logo, tweenInfoFade, {ImageTransparency = 0}):Play()
-Logo.Size = UDim2.new(0, 50, 0, 50)
-TweenService:Create(Logo, TweenInfo.new(1.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(0, 200, 0, 200)}):Play()
-
-task.delay(3, function()
-    Logo:Destroy() 
-    MainFrame.Visible = true
-    if UI._activeTab then
-        local activeTabButton = TabButtonHolder:FindFirstChild("TabButton_" .. UI._activeTab)
-        if activeTabButton then
-            local scale = activeTabButton:FindFirstChild("ClickScale")
-            if scale then
-                scale.Scale = 1
-            end
-        end
-    end
-end)
-
--- Ini wajib kamu taruh di bagian paling bawah setelah semua kode di buat
-_G.YuviHubUI = UI
