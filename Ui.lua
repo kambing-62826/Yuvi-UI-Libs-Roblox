@@ -9,6 +9,8 @@ local LP = Players.LocalPlayer
 local player = Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
 
+local MIN_SIZE = Vector2.new(300, 200)
+
 local function notify(title, text, duration)
     pcall(function()
         StarterGui:SetCore("SendNotification", {
@@ -70,9 +72,8 @@ local function makeResizable(frame, resizeHandle)
             
             newWidth = math.max(newWidth, MIN_SIZE.X)
             newHeight = math.max(newHeight, MIN_SIZE.Y)
-            
             frame.Size = UDim2.new(frameSize.X.Scale, newWidth, frameSize.Y.Scale, newHeight)
-            frame.Position = UDim2.new(0.5, -newWidth / 2, 0.5, -newHeight / 2)
+            frame.Position = UDim2.new(0.5, -newWidth / 2, 0.5, -newHeight / 2) 
         end
     end)
 
@@ -132,7 +133,7 @@ ResizeHandle.Text = ""
 ResizeHandle.Parent = MainFrame
 
 ResizeHandle.MouseEnter:Connect(function()
-    UserInputService.MouseIcon = "rbxassetid://4733364274" -- Ikon Resize Diagonal
+    UserInputService.MouseIcon = "rbxassetid://4733364274"
 end)
 ResizeHandle.MouseLeave:Connect(function()
     if not UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) then
@@ -154,18 +155,18 @@ LeftContainer.Size = UDim2.new(1, -100, 1, 0)
 LeftContainer.BackgroundTransparency = 1
 LeftContainer.Parent = TabHolder
 
-local LeftLayout = Instance.new("UIListLayout", LeftContainer)
-LeftLayout.FillDirection = Enum.FillDirection.Horizontal
-LeftLayout.HorizontalAlignment = Enum.HorizontalAlignment.Left
-LeftLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-LeftLayout.Padding = UDim.new(0, 5)
-
 local TitleLabel = Instance.new("TextLabel")
 TitleLabel.Size = UDim2.new(0, 120, 1, 0)
 TitleLabel.BackgroundTransparency = 1
 TitleLabel.Text = "Yuvi Hub"
 TitleLabel.Font = Enum.Font.GothamBold
 TitleLabel.TextSize = 18
+local LeftLayout = Instance.new("UIListLayout", LeftContainer)
+LeftLayout.FillDirection = Enum.FillDirection.Horizontal
+LeftLayout.HorizontalAlignment = Enum.HorizontalAlignment.Left
+LeftLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+LeftLayout.Padding = UDim.new(0, 5)
+
 TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
 TitleLabel.Parent = LeftContainer
@@ -228,13 +229,13 @@ Instance.new("UICorner", CloseBtn).CornerRadius = UDim.new(0, 13)
 makeDraggable(MainFrame, TabHolder)
 makeResizable(MainFrame, ResizeHandle)
 
-local ContentFrame = Instance.new("Frame", MainFrame)
+local ContentFrame = Instance.new("Frame")
 ContentFrame.Size = UDim2.new(1, 0, 1, -70)
 ContentFrame.Position = UDim2.new(0, 0, 0, 70)
 ContentFrame.BackgroundTransparency = 1
+ContentFrame.Parent = MainFrame
 
-local PopupBtn = Instance.new("TextButton", ScreenGui)
-PopupBtn.Name = "PopupBtn"
+local PopupBtn = Instance.new("TextButton")
 PopupBtn.Size = UDim2.new(0, 100, 0, 30)
 PopupBtn.Position = UDim2.new(0, 20, 1, -50)
 PopupBtn.Text = "Yuvi Hub"
@@ -243,13 +244,27 @@ PopupBtn.TextSize = 14
 PopupBtn.TextColor3 = Color3.fromRGB(255,255,255)
 PopupBtn.BackgroundColor3 = Color3.fromRGB(200,0,0)
 PopupBtn.Visible = false
+PopupBtn.Parent = ScreenGui
 Instance.new("UICorner", PopupBtn).CornerRadius = UDim.new(0, 6)
 makeDraggable(PopupBtn)
 
-local TabButtonHolder = Instance.new("Frame", MainFrame)
+-- MINIMIZE / CLOSE HANDLERS
+local minimized = false
+local function toggleGUI()
+    minimized = not minimized
+    MainFrame.Visible = not minimized
+    PopupBtn.Visible = minimized
+end
+MinimizeBtn.MouseButton1Click:Connect(toggleGUI)
+PopupBtn.MouseButton1Click:Connect(toggleGUI)
+CloseBtn.MouseButton1Click:Connect(function() ScreenGui:Destroy() end)
+
+local TabButtonHolder = Instance.new("Frame")
 TabButtonHolder.Size = UDim2.new(1, -10, 0, 35)
 TabButtonHolder.Position = UDim2.new(0, 5, 0, 35)
 TabButtonHolder.BackgroundTransparency = 1
+TabButtonHolder.Parent = MainFrame
+
 local TabLayout = Instance.new("UIListLayout", TabButtonHolder)
 TabLayout.FillDirection = Enum.FillDirection.Horizontal
 TabLayout.HorizontalAlignment = Enum.HorizontalAlignment.Left
@@ -1010,6 +1025,13 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
     end
 end)
 
+function UI:createTabs(...)
+    local names = {...}local Players = game:GetService("Players")
+    for _,n in ipairs(names) do
+        self:createTab(n)
+    end
+end
+
 local Logo = Instance.new("ImageLabel", ScreenGui)
 Logo.Size = UDim2.new(0, 200, 0, 200)
 Logo.Position = UDim2.new(0.5, -100, 0.5, -100)
@@ -1023,9 +1045,45 @@ Logo.Size = UDim2.new(0, 50, 0, 50)
 TweenService:Create(Logo, TweenInfo.new(1.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(0, 200, 0, 200)}):Play()
 
 task.delay(3, function()
-    Logo:Destroy() 
-    MainFrame.Visible = true
-    if UI._activeTab then
+    if Logo.Parent then
+        Logo:Destroy() 
+    end
+
+    if ScreenGui.Parent then
+        MainFrame.Visible = true
+    end
+
+    if next(UI._tabFrames) then
+        local firstName = next(UI._tabs)
+        local firstFrame = UI._tabFrames[firstName]
+        if firstFrame and not UI._activeTab then
+             firstFrame.Visible = true
+             UI._activeTab = firstName
+        end
+
+        local activeTabButton = TabButtonHolder:FindFirstChild("TabButton_" .. UI._activeTab)
+        if activeTabButton then
+            local scale = activeTabButton:FindFirstChild("ClickScale")
+            if scale then
+                scale.Scale = 1
+            end
+        end
+    end
+end)
+
+RunService.RenderStepped:Connect(function()
+    if not UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) then
+        if UserInputService.MouseBehavior == Enum.MouseBehavior.Exclusive then
+            UserInputService.MouseBehavior = Enum.MouseBehavior.Default
+        end
+        
+        local mouse = game.Players.LocalPlayer:GetMouse()
+        local isOverHandle = (mouse.Target == ResizeHandle)
+        
+        if not isOverHandle and UserInputService.MouseIcon == "rbxassetid://4733364274" then
+            UserInputService.MouseIcon = ""
+        end
+        
         local activeTabButton = TabButtonHolder:FindFirstChild("TabButton_" .. UI._activeTab)
         if activeTabButton then
             local scale = activeTabButton:FindFirstChild("ClickScale")
