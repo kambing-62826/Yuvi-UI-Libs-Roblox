@@ -1,4 +1,3 @@
--- === 0. KONSTANTA & SERVICE ===
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 local StarterGui = game:GetService("StarterGui")
@@ -10,7 +9,6 @@ local LP = Players.LocalPlayer
 local player = Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
 
--- 🔔 NOTIFIKASI
 local function notify(title, text, duration)
     pcall(function()
         StarterGui:SetCore("SendNotification", {
@@ -21,7 +19,6 @@ local function notify(title, text, duration)
     end)
 end
 
--- DRAG FUNCTION
 local function makeDraggable(frame, dragHandle)
     dragHandle = dragHandle or frame
     local dragging = false
@@ -60,7 +57,6 @@ local function makeDraggable(frame, dragHandle)
     end)
 end
 
--- RESIZE FUNCTION (BARU)
 local function makeResizable(frame, resizeHandle)
     local resizing = false
     local startPos, frameSize
@@ -72,13 +68,10 @@ local function makeResizable(frame, resizeHandle)
             local newWidth = frameSize.X.Offset + delta.X
             local newHeight = frameSize.Y.Offset + delta.Y
             
-            -- Batasi ukuran minimum
             newWidth = math.max(newWidth, MIN_SIZE.X)
             newHeight = math.max(newHeight, MIN_SIZE.Y)
             
             frame.Size = UDim2.new(frameSize.X.Scale, newWidth, frameSize.Y.Scale, newHeight)
-            
-            -- Pertahankan posisi tengah (AnchorPoint 0.5)
             frame.Position = UDim2.new(0.5, -newWidth / 2, 0.5, -newHeight / 2)
         end
     end)
@@ -88,8 +81,6 @@ local function makeResizable(frame, resizeHandle)
             resizing = true
             startPos = input.Position
             frameSize = frame.Size
-            
-            -- Mengunci kursor untuk pengalaman resize yang lebih baik
             UserInputService.MouseBehavior = Enum.MouseBehavior.Exclusive
         end
     end
@@ -97,7 +88,6 @@ local function makeResizable(frame, resizeHandle)
     local function onInputEnded(input)
         if (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) and resizing then
             resizing = false
-            -- Mengembalikan kursor ke default
             UserInputService.MouseBehavior = Enum.MouseBehavior.Default
         end
     end
@@ -110,33 +100,28 @@ local function makeResizable(frame, resizeHandle)
     end)
 end
 
--- === 1. PEMBANGUNAN UI UTAMA
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "YuviHub"
 ScreenGui.ResetOnSpawn = false
 ScreenGui.Parent = playerGui
 
--- MAIN FRAME (GUI UTAMA)
 local MainFrame = Instance.new("Frame")
 MainFrame.Size = UDim2.new(0, 600, 0, 400)
 MainFrame.Position = UDim2.new(0.5, -300, 0.5, -200)
 MainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 MainFrame.BorderSizePixel = 0
-MainFrame.Visible = false -- Sembunyikan untuk Key System
+MainFrame.Visible = false 
 MainFrame.Parent = ScreenGui
 
--- border stroke
 local stroke = Instance.new("UIStroke")
 stroke.Thickness = 1
 stroke.Color = Color3.fromRGB(255, 0, 0)
 stroke.Parent = MainFrame
 
--- round corners
 local corner = Instance.new("UICorner")
 corner.CornerRadius = UDim.new(0, 15)
 corner.Parent = MainFrame
 
--- RESIZE HANDLE (BARU)
 local ResizeHandle = Instance.new("TextButton")
 ResizeHandle.Name = "ResizeHandle"
 ResizeHandle.Size = UDim2.new(0, 15, 0, 15)
@@ -146,18 +131,15 @@ ResizeHandle.BackgroundTransparency = 1
 ResizeHandle.Text = ""
 ResizeHandle.Parent = MainFrame
 
--- Mengubah kursor saat hover di Resize Handle
 ResizeHandle.MouseEnter:Connect(function()
     UserInputService.MouseIcon = "rbxassetid://4733364274" -- Ikon Resize Diagonal
 end)
 ResizeHandle.MouseLeave:Connect(function()
-    -- Hanya reset ikon jika tombol mouse tidak ditekan (tidak sedang resize)
     if not UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) then
         UserInputService.MouseIcon = ""
     end
 end)
 
--- HEADER / TAB HOLDER
 local TabHolder = Instance.new("Frame")
 TabHolder.Size = UDim2.new(1, 0, 0, 35)
 TabHolder.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
@@ -167,7 +149,6 @@ local headerCorner = Instance.new("UICorner")
 headerCorner.CornerRadius = UDim.new(0, 15)
 headerCorner.Parent = TabHolder
 
--- Left (Title + Tabs)
 local LeftContainer = Instance.new("Frame")
 LeftContainer.Size = UDim2.new(1, -100, 1, 0)
 LeftContainer.BackgroundTransparency = 1
@@ -179,7 +160,6 @@ LeftLayout.HorizontalAlignment = Enum.HorizontalAlignment.Left
 LeftLayout.VerticalAlignment = Enum.VerticalAlignment.Center
 LeftLayout.Padding = UDim.new(0, 5)
 
--- Title
 local TitleLabel = Instance.new("TextLabel")
 TitleLabel.Size = UDim2.new(0, 120, 1, 0)
 TitleLabel.BackgroundTransparency = 1
@@ -202,7 +182,6 @@ textGradient.Color = ColorSequence.new{
 textGradient.Rotation = 90
 textGradient.Parent = TitleLabel
 
--- Header logo
 local HeaderLogo = Instance.new("ImageLabel")
 HeaderLogo.Size = UDim2.new(0, 40, 0, 30)
 HeaderLogo.BackgroundTransparency = 1
@@ -213,7 +192,6 @@ local spacing = Instance.new("UIPadding")
 spacing.PaddingRight = UDim.new(0, 5)
 spacing.Parent = HeaderLogo
 
--- Right (Close + Minimize)
 local RightContainer = Instance.new("Frame")
 RightContainer.Size = UDim2.new(0, 80, 1, 0)
 RightContainer.AnchorPoint = Vector2.new(1, 0)
@@ -227,7 +205,6 @@ RightLayout.HorizontalAlignment = Enum.HorizontalAlignment.Right
 RightLayout.VerticalAlignment = Enum.VerticalAlignment.Center
 RightLayout.Padding = UDim.new(0, 2)
 
--- Minimize button
 local MinimizeBtn = Instance.new("TextButton")
 MinimizeBtn.Size = UDim2.new(0, 35, 1, 0)
 MinimizeBtn.Text = "-"
@@ -238,7 +215,6 @@ MinimizeBtn.BackgroundColor3 = Color3.fromRGB(100,100,100)
 MinimizeBtn.Parent = RightContainer
 Instance.new("UICorner", MinimizeBtn).CornerRadius = UDim.new(0, 13)
 
--- Close button
 local CloseBtn = Instance.new("TextButton")
 CloseBtn.Size = UDim2.new(0, 35, 1, 0)
 CloseBtn.Text = "X"
@@ -250,17 +226,13 @@ CloseBtn.Parent = RightContainer
 Instance.new("UICorner", CloseBtn).CornerRadius = UDim.new(0, 13)
 
 makeDraggable(MainFrame, TabHolder)
-
--- Panggil fungsi Resize (BARU)
 makeResizable(MainFrame, ResizeHandle)
 
--- CONTENT FRAME
 local ContentFrame = Instance.new("Frame", MainFrame)
 ContentFrame.Size = UDim2.new(1, 0, 1, -70)
 ContentFrame.Position = UDim2.new(0, 0, 0, 70)
 ContentFrame.BackgroundTransparency = 1
 
--- POPUP BUTTON (Minimized State - DEKLARASI KRUSIAL)
 local PopupBtn = Instance.new("TextButton", ScreenGui)
 PopupBtn.Name = "PopupBtn"
 PopupBtn.Size = UDim2.new(0, 100, 0, 30)
@@ -274,7 +246,6 @@ PopupBtn.Visible = false
 Instance.new("UICorner", PopupBtn).CornerRadius = UDim.new(0, 6)
 makeDraggable(PopupBtn)
 
--- TAB BUTTON HOLDER
 local TabButtonHolder = Instance.new("Frame", MainFrame)
 TabButtonHolder.Size = UDim2.new(1, -10, 0, 35)
 TabButtonHolder.Position = UDim2.new(0, 5, 0, 35)
@@ -285,7 +256,6 @@ TabLayout.HorizontalAlignment = Enum.HorizontalAlignment.Left
 TabLayout.VerticalAlignment = Enum.VerticalAlignment.Center
 TabLayout.Padding = UDim.new(0, 5)
 
--- KEY INPUT FRAME
 local KeyFrame = Instance.new("Frame", ScreenGui)
 KeyFrame.Size = UDim2.new(0, 350, 0, 180) 
 KeyFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
@@ -315,7 +285,6 @@ KeyInput.TextColor3 = Color3.fromRGB(0, 0, 0)
 KeyInput.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
 KeyInput.ClearTextOnFocus = true 
 
--- Submit button (DEKLARASI KRUSIAL)
 local SubmitBtn = Instance.new("TextButton", KeyFrame)
 SubmitBtn.Name = "SubmitBtn"
 SubmitBtn.Size = UDim2.new(0.5, 0, 0.2, 0)
@@ -335,11 +304,10 @@ GetKeyBtn.Text = "DAPATKAN KEY"
 GetKeyBtn.Font = Enum.Font.GothamBold
 GetKeyBtn.TextSize = 14
 GetKeyBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-GetKeyBtn.BackgroundColor3 = Color3.fromRGB(0, 100, 200) 
+GetKeyBtn.BackgroundColor3 = Color3.fromRGB(0, 100, 200)
 Instance.new("UICorner", GetKeyBtn).CornerRadius = UDim.new(0, 4)
 GetKeyBtn.Parent = KeyFrame
 
--- === 2. UI MODULE OBJECT & TAB API ===
 local UI = {}
 UI._tabs = {}
 UI._tabFrames = {}
@@ -387,7 +355,6 @@ function UI:createTab(name)
     scale.Name = "ClickScale"
     scale.Scale = 1
 
-    -- === TAB FRAME ===
     local TabFrame = Instance.new("Frame")
     TabFrame.Name = "TabFrame_" .. name
     TabFrame.Size = UDim2.new(1, -10, 1, -10)
@@ -461,7 +428,6 @@ function UI:createTab(name)
         return (column == 1 and LeftColumn or RightColumn)
     end
     
-    -- createSection(title, column)
     function TabAPI:createSection(title, column)
         local parent = getParent(self, column)
         local container = Instance.new("Frame")
@@ -493,7 +459,6 @@ function UI:createTab(name)
         return container
     end
 
-    -- createToggle(label, default, callback, column)
     function TabAPI:createToggle(labelText, defaultState, callback, column)
         local parent = getParent(self, column)
         local container = Instance.new("Frame")
@@ -576,13 +541,11 @@ function UI:createTab(name)
         }
     end
 
-    -- createButton(text, callback, column)
 function TabAPI:createButton(text, callback, column)
     local parent = getParent(self, column)
     local button = Instance.new("TextButton")
     button.Size = UDim2.new(0, 120, 0, 35)
     
-    -- Ganti BackgroundColor3 dengan gradien yang sudah ada
     button.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
     button.BackgroundTransparency = 0 
     
@@ -612,16 +575,15 @@ function TabAPI:createButton(text, callback, column)
     scale.Parent = button
     
     local DEFAULT_BG = Color3.fromRGB(60, 60, 60)
-    local HOVER_BG = Color3.fromRGB(80, 80, 80) -- Warna untuk hover
+    local HOVER_BG = Color3.fromRGB(80, 80, 80) 
 
-    -- ANIMASI HOVER DENGAN BACKGROUNDCOLOR3 & SCALE 
     local function animateButton(targetScale, targetColor)
         TweenService:Create(
             scale,
             TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
             {Scale = targetScale}
         ):Play()
-        TweenService:Create( 
+        TweenService:Create(
             button,
             TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
             {BackgroundColor3 = targetColor}
@@ -659,7 +621,6 @@ function TabAPI:createButton(text, callback, column)
     return button
 end
 
-    -- createSlider(label, min, max, default, callback, column)
     function TabAPI:createSlider(labelText, min, max, default, callback, column)
         local parent = getParent(self, column)
         local container = Instance.new("Frame")
@@ -764,7 +725,6 @@ return {
     }
 end
 
- -- createDropdown(labelText, options, default, callback, column)
 function TabAPI:createDropdown(labelText, options, default, callback, column)
     local parent = getParent(self, column)
     local container = Instance.new("Frame")
@@ -940,7 +900,6 @@ function TabAPI:createDropdown(labelText, options, default, callback, column)
     }
 end
 
-    -- createKeybind(label, defaultKey, callback, column)
     function TabAPI:createKeybind(labelText, defaultKey, callback, column)
         local parent = getParent(self, column)
         local container = Instance.new("Frame")
@@ -1022,7 +981,6 @@ end
     return TabAPI
 end
 
--- KEY INPUT HANDLER (global)
 UserInputService.InputBegan:Connect(function(input, gameProcessed)
     if UI._editing and input.UserInputType == Enum.UserInputType.Keyboard then
         local key = input.KeyCode
@@ -1059,8 +1017,30 @@ function UI:createTabs(...)
     end
 end
 
-if PlayerTab then
-    PlayerTab._frame.Visible = true
-    UI._activeTab = "PlayerTab"
-end
+local Logo = Instance.new("ImageLabel", ScreenGui)
+Logo.Size = UDim2.new(0, 200, 0, 200)
+Logo.Position = UDim2.new(0.5, -100, 0.5, -100)
+Logo.BackgroundTransparency = 1
+Logo.Image = "rbxassetid://81450116624685"
+Logo.ImageTransparency = 1
+
+local tweenInfoFade = TweenInfo.new(1.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+TweenService:Create(Logo, tweenInfoFade, {ImageTransparency = 0}):Play()
+Logo.Size = UDim2.new(0, 50, 0, 50)
+TweenService:Create(Logo, TweenInfo.new(1.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(0, 200, 0, 200)}):Play()
+
+task.delay(3, function()
+    Logo:Destroy() 
+    MainFrame.Visible = true
+    if UI._activeTab then
+        local activeTabButton = TabButtonHolder:FindFirstChild("TabButton_" .. UI._activeTab)
+        if activeTabButton then
+            local scale = activeTabButton:FindFirstChild("ClickScale")
+            if scale then
+                scale.Scale = 1
+            end
+        end
+    end
+end)
+    
 _G.YuviHubUI = UI
