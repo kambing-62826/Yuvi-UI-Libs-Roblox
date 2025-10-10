@@ -250,14 +250,26 @@ makeDraggable(PopupBtn)
 
 -- MINIMIZE / CLOSE HANDLERS
 local minimized = false
-local function toggleGUI()
-    minimized = not minimized
-    MainFrame.Visible = not minimized
-    PopupBtn.Visible = minimized
+local function toggleMinimize()
+    if MainFrame.Parent and PopupBtn.Parent then
+        minimized = not minimized
+        MainFrame.Visible = not minimized
+        PopupBtn.Visible = minimized
+    end
 end
-MinimizeBtn.MouseButton1Click:Connect(toggleGUI)
-PopupBtn.MouseButton1Click:Connect(toggleGUI)
-CloseBtn.MouseButton1Click:Connect(function() ScreenGui:Destroy() end)
+
+MinimizeBtn.MouseButton1Click:Connect(toggleMinimize)
+PopupBtn.MouseButton1Click:Connect(toggleMinimize)
+
+CloseBtn.MouseButton1Click:Connect(function()
+    if MainFrame.Parent then
+        MainFrame.Visible = false
+    end
+    if PopupBtn.Parent then
+        PopupBtn.Visible = false
+    end
+    minimized = true
+end)
 
 local TabButtonHolder = Instance.new("Frame")
 TabButtonHolder.Size = UDim2.new(1, -10, 0, 35)
