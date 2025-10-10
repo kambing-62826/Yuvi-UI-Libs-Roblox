@@ -1106,4 +1106,3 @@ RunService.RenderStepped:Connect(function()
     end
 end)
     
-_G.YuviHubUI = UI
