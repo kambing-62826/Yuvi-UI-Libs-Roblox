@@ -1132,7 +1132,7 @@ end
         local function onInputChanged(input)
             if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
                 local relative = (input.Position.X - track.AbsolutePosition.X) / track.AbsoluteSize.X
-                value = math.clamp(min + relative * (max - min), min, max)
+                value = math.clamp(v, minValue, maxValue)
                 updateVisual()
                 if callback then pcall(callback, value) end
             end
