@@ -819,7 +819,10 @@ end
     end
 
     -- createSection
-    function TabAPI:createSection(title, column)
+    function TabAPI:createSection(config)
+        local title = config.Name "Section"
+        local column = config.Column or 1
+        
         local parent = getParent(self, column)
         local container = Instance.new("Frame")
         container.Name = "SectionContainer"
@@ -964,7 +967,11 @@ function TabAPI:createToggle(config)
 end
 
     -- createButton
-    function TabAPI:createButton(text, callback, column)
+    function TabAPI:createButton(config)
+        local buttonText = config.Name or "Button"
+        local callback = config.Callback or function() end
+        local column = config.Column or 1
+        
         local parent = getParent(self, column)
         local button = Instance.new("TextButton")
         button.Name = "Button"
@@ -1033,7 +1040,14 @@ end
     end
 
     -- createSlider
-    function TabAPI:createSlider(labelText, min, max, default, callback, column)
+    function TabAPI:createSlider(config)
+        local name = config.Name or "Slider"
+        local minValue = config.Min or 05
+        local maxValue = config.Max or 100
+        local default = config.Default or minValue
+        local callback = config.Callback or function() end
+        local column = config.Column or 1
+        
         local parent = getParent(self, column)
         local container = Instance.new("Frame")
         container.Name = "SliderContainer" 
@@ -1144,7 +1158,13 @@ end
     end
 
     -- createDropdown
-function TabAPI:createDropdown(labelText, options, default, callback, column)
+function TabAPI:createDropdown(config)
+    local labelText = config.Name or "Dropdown"
+    local options = config.Options or {}
+    local default = config.CurrentOption or options[1]
+    local callback = config.Callback or function() end
+    local column = config.Column or 1 
+    
     local TweenService = game:GetService("TweenService")
     local UserInputService = game:GetService("UserInputService")
 
@@ -1377,7 +1397,12 @@ function TabAPI:createDropdown(labelText, options, default, callback, column)
 end
 
     -- createKeybind
-    function TabAPI:createKeybind(labelText, defaultKey, callback, column)
+    function TabAPI:createKeybind(config)
+        local name = config.Name "Keybind"
+        local default = config.Default or Enum.Keycode.T
+        local callback = config.Callback or function() end
+        local column = config.Column or 1
+        
         local parent = getParent(self, column)
         local container = Instance.new("Frame")
         container.Name = "KeybindContainer"
