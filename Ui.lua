@@ -1481,21 +1481,21 @@ function UI:createTabs(...)
 end
 
 task.defer(function()
-        
     repeat task.wait() until UI._Elements.MainFrame and UI._Elements.TabButtonHolder
 
-    local activeTabButton = UI._Elements.TabButtonHolder:FindFirstChild("TabButton_" .. "Player")
-    if activeTabButton then
-        activeTabButton.BackgroundColor3 = CurrentTheme.ButtonBG
-        local tabFrame = UI._tabFrames["Player"]
-        if tabFrame then
-            tabFrame.Visible = true
-            UI._activeTab = "Player"
-        end
-    end
-end)
+    local firstTabButton = UI._Elements.TabButtonHolder:FindFirstChildWhichIsA("TextButton")
+    if not firstTabButton then return end
 
-UI.CurrentThemeName = "Dark Red"
+    local tabName = string.gsub(firstTabButton.Name, "TabButton_", "")
+    local tabFrame = UI._tabFrames[tabName]
+        
+if tabFrame then
+    tabFrame.Visible = true
+    UI._activeTab = tabName
+    firstTabButton.BackgroundColor3 = CurrentTheme.ButtonBG
+else
+    warn("⚠️ No tab frames found to activate!")
+end
 
 local Logo = Instance.new("ImageLabel")
 Logo.Name = "LoadingLogo"
@@ -1517,9 +1517,10 @@ task.delay(3, function()
     Logo:Destroy()
     MainFrame.Visible = true
     if UI._activeTab then
-        applyTheme(themeDropdown:Get())
+        applyTheme(UI.CurrentThemeName or "Dark Red")
     end
 end)
 
+UI.CurrentThemeName = "Dark Red"
 return UI
 
