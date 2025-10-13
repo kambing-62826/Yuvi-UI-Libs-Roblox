@@ -1585,5 +1585,4 @@ end
 UI.Themes = Themes
 UI.CurrentTheme = CurrentTheme
 
-UI.CurrentThemeName = "Dark Red"
 return UI
