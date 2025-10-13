@@ -1121,22 +1121,31 @@ end
         local value = default
         local dragging = false
         
-        local function updateVisual()
-            local percent = (value - minValue) / (maxValue - minValue)
-            fill.Size = UDim2.new(percent, 0, 1, 0)
-            knob.Position = UDim2.new(percent, -7, 0.5, -7)
-            valueLabel.Text = tostring(math.floor(value))
-        end
-        updateVisual()
+local function updateVisual()
+    local percent = (value - minValue) / (maxValue - minValue)
+    fill.Size = UDim2.new(percent, 0, 1, 0)
+    knob.Position = UDim2.new(percent, -7, 0.5, -7)
+    valueLabel.Text = tostring(math.floor(value))
+end
 
-        local function onInputChanged(input)
-            if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
-                local relative = (input.Position.X - track.AbsolutePosition.X) / track.AbsoluteSize.X
-                value = math.clamp(v, minValue, maxValue)
-                updateVisual()
-                if callback then pcall(callback, value) end
+local function onInputChanged(input)
+    if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+        local relative = (input.Position.X - track.AbsolutePosition.X) / track.AbsoluteSize.X
+        relative = math.clamp(relative, 0, 1)
+
+        local newValue = minValue + (maxValue - minValue) * relative
+        value = newValue
+        updateVisual()
+        if callback then
+            local ok, err = pcall(function()
+                callback(value)
+            end)
+            if not ok then
+                warn("Slider callback error:", err)
             end
         end
+    end
+end
 
         track.InputBegan:Connect(function(input)
             if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
