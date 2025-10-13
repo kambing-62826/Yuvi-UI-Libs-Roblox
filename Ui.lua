@@ -1480,6 +1480,33 @@ function UI:createTabs(...)
     end
 end
 
+task.defer(function()
+        
+    repeat task.wait() until UI._Elements.MainFrame and UI._Elements.TabButtonHolder
+
+    local activeTabButton = UI._Elements.TabButtonHolder:FindFirstChild("TabButton_" .. "Player")
+    if activeTabButton then
+        activeTabButton.BackgroundColor3 = CurrentTheme.ButtonBG
+        local tabFrame = UI._tabFrames["Player"]
+        if tabFrame then
+            tabFrame.Visible = true
+            UI._activeTab = "Player"
+        end
+    end
+end)
+
+local SgTab = UI:createTab("UI Theme")
+local themeDropdown = SgTab:createDropdown(
+    "Select Theme",
+    ThemeNames,
+    "Dark Red",
+    function(selectedThemeName)
+        if selectedThemeName then
+            applyTheme(selectedThemeName)
+            UI:Notify("Theme Changed", "UI theme set to: " .. selectedThemeName, 1.5)
+        end
+    end)
+
 local Logo = Instance.new("ImageLabel")
 Logo.Name = "LoadingLogo"
 Logo.Size = UDim2.new(0, 200, 0, 200)
