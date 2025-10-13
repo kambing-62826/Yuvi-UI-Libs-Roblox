@@ -177,13 +177,6 @@ local Themes = {
     },
 }
 
-local function applyTheme(themeName)
-    local theme = Themes[themeName]
-    if theme then
-        CurrentTheme = theme
-    end
-end
-
 local ThemeNames = {}
 for name in pairs(Themes) do
     table.insert(ThemeNames, name)
@@ -1016,8 +1009,12 @@ end
             ):Play()
         end
 
-        button.MouseEnter:Connect(function() animateButton(1.05, CurrentTheme.ButtonHover) end) -- Menggunakan tema
-        button.MouseLeave:Connect(function() animateButton(1, CurrentTheme.ButtonBG) end) -- Menggunakan tema
+        button.MouseEnter:Connect(function()
+            TweenService:Create(button, TweenInfo.new(0.15), {BackgroundColor3 = CurrentTheme.ButtonHover}):Play()
+        end)
+        button.MouseLeave:Connect(function()
+            TweenService:Create(button, TweenInfo.new(0.15), {BackgroundColor3 = CurrentTheme.ButtonBG}):Play()
+        end)
 
         button.MouseButton1Click:Connect(function()
             local shrink = TweenService:Create( 
@@ -1069,7 +1066,7 @@ end
         label.TextSize = 14
         label.TextColor3 = CurrentTheme.TextColorSecondary
         label.TextXAlignment = Enum.TextXAlignment.Left
-        label.Text = Text
+        label.Text = name
         label.Parent = header
 
         local valueLabel = Instance.new("TextLabel")
@@ -1111,7 +1108,7 @@ end
         knob.Parent = track
         Instance.new("UICorner", knob).CornerRadius = UDim.new(1, 0)
 
-        local value = default or min
+        local value = default
         local dragging = false
         
         local function updateVisual()
@@ -1150,7 +1147,7 @@ end
             Frame = container,
             Get = function() return value end,
             Set = function(v)
-                value = math.clamp(v, min, max)
+                value = math.clamp(v, minValue, maxValue)
                 updateVisual()
                 if callback then pcall(callback, value) end
             end
@@ -1399,7 +1396,7 @@ end
     -- createKeybind
     function TabAPI:createKeybind(config)
         local name = config.Name or "Keybind"
-        local default = config.Default or Enum.KeyCode.T
+        local defaultKey = config.Default or Enum.KeyCode.T
         local callback = config.Callback or function() end
         local column = config.Column or 1
         
@@ -1443,7 +1440,7 @@ end
         glow.Color = CurrentTheme.KeybindGlow 
         glow.Transparency = 1
 
-        local keybindName = labelText:gsub(" ", "")
+        local keybindName = name:gsub(" ", "")
         UI._keybinds[name] = defaultKey
         if callback then UI._keybindCallbacks[name] = callback end
 
@@ -1551,15 +1548,23 @@ Logo.Size = UDim2.new(0, 50, 0, 50)
 TweenService:Create(Logo, tweenInfoScale, {Size = UDim2.new(0, 200, 0, 200)}):Play()
 
 task.delay(3, function()
-    if Logo then Logo:Destroy() end
+    if Logo and Logo.Parent then
+        Logo:Destroy()
+    end
     if MainFrame then
         MainFrame.Visible = true
     end
-
     if UI and UI.ApplyTheme then
         UI:ApplyTheme(UI.CurrentThemeName or "Dark Red")
     end
 end)
+
+function UI:ApplyTheme(themeName)
+    applyTheme(themeName)
+end
+
+UI.Themes = Themes
+UI.CurrentTheme = CurrentTheme
 
 UI.CurrentThemeName = "Dark Red"
 return UI
