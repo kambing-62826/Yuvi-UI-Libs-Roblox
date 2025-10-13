@@ -853,7 +853,7 @@ end
     end
 
     -- createToggle
-function TabAPI:createToggle(labelText, defaultState, callback, column)
+function TabAPI:createToggle(config)
     local labelText = config.Name or "Toggle"
     local defaultState = config.CurrentValue or false
     local callback = config.Callback or function() end
