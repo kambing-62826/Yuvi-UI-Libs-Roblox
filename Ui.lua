@@ -806,6 +806,12 @@ function UI:createTab(name)
     local TabAPI = {}
     TabAPI._frame = TabFrame
     TabAPI._name = name
+    
+    if not UI._activeTab then
+    UI._activeTab = name
+    TabFrame.Visible = true
+    TabButton.BackgroundColor3 = CurrentTheme.ButtonBG
+end
 
     local function getParent(self, column)
         column = column or 1
@@ -1499,3 +1505,4 @@ task.delay(3, function()
 end)
 
 return UI
+
