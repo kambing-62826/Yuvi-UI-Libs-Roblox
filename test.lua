@@ -177,6 +177,16 @@ local Themes = {
     },
 }
 
+local function applyTheme(themeName)
+    local theme = Themes[themeName]
+    if theme then
+        CurrentTheme = theme
+        print("Applied theme:", themeName)
+    else
+        warn("Theme not found:", themeName)
+    end
+end
+
 local ThemeNames = {}
 for name in pairs(Themes) do
     table.insert(ThemeNames, name)
