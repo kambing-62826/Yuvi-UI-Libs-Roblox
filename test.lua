@@ -1573,14 +1573,21 @@ task.delay(3, function()
     if MainFrame then
         MainFrame.Visible = true
     end
+
+    local defaultTheme = UI.CurrentThemeName or "Dark Red"
+    
     if UI and UI.ApplyTheme then
-        UI:ApplyTheme(UI.CurrentThemeName or "Dark Red")
+        UI:ApplyTheme(defaultTheme)
+    elseif applyTheme then
+        applyTheme(defaultTheme)
+    else
+        warn("⚠️ Tidak menemukan fungsi ApplyTheme di UI.")
+    end
+
+    if themeDropdown and themeDropdown.Set then
+        themeDropdown:Set(defaultTheme)
     end
 end)
-
-function UI:ApplyTheme(themeName)
-    applyTheme(themeName)
-end
 
 UI.Themes = Themes
 UI.CurrentTheme = CurrentTheme
