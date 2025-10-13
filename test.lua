@@ -820,7 +820,7 @@ end
 
     -- createSection
     function TabAPI:createSection(config)
-        local title = config.Name "Section"
+        local title = config.Name or "Section"
         local column = config.Column or 1
         
         local parent = getParent(self, column)
@@ -979,7 +979,7 @@ end
         button.BackgroundColor3 = CurrentTheme.ButtonBG
         button.BackgroundTransparency = 0
         button.BorderSizePixel = 0
-        button.Text = text
+        button.Text = buttonText
         button.Font = Enum.Font.GothamBold
         button.TextSize = 14
         button.TextColor3 = CurrentTheme.TextColor
@@ -1042,7 +1042,7 @@ end
     -- createSlider
     function TabAPI:createSlider(config)
         local name = config.Name or "Slider"
-        local minValue = config.Min or 05
+        local minValue = config.Min or 0
         local maxValue = config.Max or 100
         local default = config.Default or minValue
         local callback = config.Callback or function() end
@@ -1115,7 +1115,7 @@ end
         local dragging = false
         
         local function updateVisual()
-            local percent = (value - min) / (max - min)
+            local percent = (value - minValue) / (maxValue - minValue)
             fill.Size = UDim2.new(percent, 0, 1, 0)
             knob.Position = UDim2.new(percent, -7, 0.5, -7)
             valueLabel.Text = tostring(math.floor(value))
@@ -1398,8 +1398,8 @@ end
 
     -- createKeybind
     function TabAPI:createKeybind(config)
-        local name = config.Name "Keybind"
-        local default = config.Default or Enum.Keycode.T
+        local name = config.Name or "Keybind"
+        local default = config.Default or Enum.KeyCode.T
         local callback = config.Callback or function() end
         local column = config.Column or 1
         
@@ -1422,7 +1422,7 @@ end
         label.Font = Enum.Font.GothamBold
         label.TextSize = 14
         label.TextColor3 = CurrentTheme.TextColor
-        label.Text = labelText
+        label.Text = name
         label.TextXAlignment = Enum.TextXAlignment.Left
         label.Parent = container
 
@@ -1444,8 +1444,8 @@ end
         glow.Transparency = 1
 
         local keybindName = labelText:gsub(" ", "")
-        UI._keybinds[keybindName] = defaultKey
-        if callback then UI._keybindCallbacks[keybindName] = callback end
+        UI._keybinds[name] = defaultKey
+        if callback then UI._keybindCallbacks[name] = callback end
 
         keybindButton.MouseButton1Click:Connect(function()
             if UI._editing and UI._editing.KeyName ~= keybindName then 
