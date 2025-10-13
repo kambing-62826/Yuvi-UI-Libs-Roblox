@@ -1589,6 +1589,10 @@ task.delay(3, function()
     end
 end)
 
+function UI:ApplyTheme(themeName)
+    applyTheme(themeName)
+end
+
 UI.Themes = Themes
 UI.CurrentTheme = CurrentTheme
 
