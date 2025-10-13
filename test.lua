@@ -1069,7 +1069,7 @@ end
         label.TextSize = 14
         label.TextColor3 = CurrentTheme.TextColorSecondary
         label.TextXAlignment = Enum.TextXAlignment.Left
-        label.Text = labelText
+        label.Text = Text
         label.Parent = header
 
         local valueLabel = Instance.new("TextLabel")
@@ -1551,10 +1551,13 @@ Logo.Size = UDim2.new(0, 50, 0, 50)
 TweenService:Create(Logo, tweenInfoScale, {Size = UDim2.new(0, 200, 0, 200)}):Play()
 
 task.delay(3, function()
-    Logo:Destroy()
-    MainFrame.Visible = true
-    if UI._activeTab then
-        applyTheme(UI.CurrentThemeName or "Dark Red")
+    if Logo then Logo:Destroy() end
+    if MainFrame then
+        MainFrame.Visible = true
+    end
+
+    if UI and UI.ApplyTheme then
+        UI:ApplyTheme(UI.CurrentThemeName or "Dark Red")
     end
 end)
 
