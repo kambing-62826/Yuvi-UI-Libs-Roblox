@@ -1495,17 +1495,7 @@ task.defer(function()
     end
 end)
 
-local SgTab = UI:createTab("UI Theme")
-local themeDropdown = SgTab:createDropdown(
-    "Select Theme",
-    ThemeNames,
-    "Dark Red",
-    function(selectedThemeName)
-        if selectedThemeName then
-            applyTheme(selectedThemeName)
-            UI:Notify("Theme Changed", "UI theme set to: " .. selectedThemeName, 1.5)
-        end
-    end)
+UI.CurrentThemeName = "Dark Red"
 
 local Logo = Instance.new("ImageLabel")
 Logo.Name = "LoadingLogo"
