@@ -853,23 +853,23 @@ end
     end
 
     -- createToggle
-function TabAPI:createToggle(config)
+function TabAPI:createToggle(labelText, defaultState, callback, column)
     local labelText = config.Name or "Toggle"
     local defaultState = config.CurrentValue or false
     local callback = config.Callback or function() end
     local column = config.Column or 1
     local flag = config.Flag or labelText
-
+    
     local parent = getParent(self, column)
     local container = Instance.new("Frame")
-    container.Name = "ToggleContainer_" .. flag
+    container.Name = "ToggleContainer"
     container.Size = UDim2.new(1, 0, 0, 50)
     container.BackgroundTransparency = 1
     container.Parent = parent
 
     local vLayout = Instance.new("UIListLayout", container)
     vLayout.FillDirection = Enum.FillDirection.Vertical
-    vLayout.Padding = UDim.new(0, 5)
+    vLayout.Padding = UDim.new(0, 5) 
     vLayout.HorizontalAlignment = Enum.HorizontalAlignment.Left
     vLayout.VerticalAlignment = Enum.VerticalAlignment.Top
     vLayout.SortOrder = Enum.SortOrder.LayoutOrder
@@ -895,10 +895,10 @@ function TabAPI:createToggle(config)
     Instance.new("UICorner", holder).CornerRadius = UDim.new(0, 12)
 
     local g = Instance.new("UIGradient", holder)
-    g.Color = ColorSequence.new{
-        ColorSequenceKeypoint.new(0, CurrentTheme.ButtonHover),
-        ColorSequenceKeypoint.new(0.5, CurrentTheme.ButtonBG),
-        ColorSequenceKeypoint.new(1, CurrentTheme.MainBG)
+    g.Color = ColorSequence.new{ 
+        ColorSequenceKeypoint.new(0, CurrentTheme.ButtonHover), 
+        ColorSequenceKeypoint.new(0.5, CurrentTheme.ButtonBG), 
+        ColorSequenceKeypoint.new(1, CurrentTheme.MainBG) 
     }
     g.Rotation = 90
 
@@ -917,23 +917,20 @@ function TabAPI:createToggle(config)
     glow.Transparency = 1
     glow.Parent = knob
 
-    local state = defaultState
+    local state = defaultState or false
     ToggleStates[container] = state
-
+    
     local function updateVisual()
         if state then
-            TweenService:Create(knob, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-                {Position = UDim2.new(0, 60, 0.5, -7.5), BackgroundColor3 = CurrentTheme.AccentDark}):Play()
+            TweenService:Create(knob, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Position = UDim2.new(0, 60, 0.5, -7.5), BackgroundColor3 = CurrentTheme.AccentDark}):Play()
             glow.Transparency = 0
             label.TextColor3 = CurrentTheme.TextColor
         else
-            TweenService:Create(knob, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-                {Position = UDim2.new(0, 5, 0.5, -7.5), BackgroundColor3 = CurrentTheme.ToggleOffKnob}):Play()
+            TweenService:Create(knob, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Position = UDim2.new(0, 5, 0.5, -7.5), BackgroundColor3 = CurrentTheme.ToggleOffKnob}):Play()
             glow.Transparency = 1
             label.TextColor3 = CurrentTheme.TextColorSecondary
         end
     end
-
     updateVisual()
 
     holder.InputBegan:Connect(function(input)
@@ -941,16 +938,14 @@ function TabAPI:createToggle(config)
             state = not state
             ToggleStates[container] = state
             updateVisual()
-            local ok, err = pcall(function()
-                callback(state)
-            end)
-            if not ok then
-                warn("Toggle callback error:", err)
+            if callback then
+                local ok,err = pcall(function() callback(state) end)
+                if not ok then warn("Toggle callback error:", err) end
             end
         end
     end)
 
-    local api = {}
+ local api = {}
     api.Frame = container
     api.Flag = flag
 
