@@ -1488,14 +1488,13 @@ task.defer(function()
 
     local tabName = string.gsub(firstTabButton.Name, "TabButton_", "")
     local tabFrame = UI._tabFrames[tabName]
-        
-if tabFrame then
-    tabFrame.Visible = true
-    UI._activeTab = tabName
-    firstTabButton.BackgroundColor3 = CurrentTheme.ButtonBG
-else
-    warn("⚠️ No tab frames found to activate!")
-end
+
+    if tabFrame then
+        tabFrame.Visible = true
+        UI._activeTab = tabName
+        firstTabButton.BackgroundColor3 = CurrentTheme.ButtonBG
+    end
+end)
 
 local Logo = Instance.new("ImageLabel")
 Logo.Name = "LoadingLogo"
