@@ -14,7 +14,7 @@ Jika akun kamu terkena banned, **jangan salahkan siapa pun selain dirimu sendiri
 Salin kode di bawah ini dan tempel ke editor executor kamu:
 
 ```lua
-local Yv = loadstring(game:HttpGet("https://raw.githubusercontent.com/kambing-62826/Yuvi-UI-Libs/refs/heads/main/Yuvi%20Libs.lua"))()
+local Yv = loadstring(game:HttpGet("https://raw.githubusercontent.com/kambing-62826/Yuvi-UI-Libs-Roblox/refs/heads/roblox/Yuvi%20Libs.lua"))()
 ```
 ## 💡 Catatan:
 Di dalam loadstring sebenarnya sudah ada fitur Notify, jadi bagian berikut ini hanya contoh tambahan — tidak wajib digunakan.
