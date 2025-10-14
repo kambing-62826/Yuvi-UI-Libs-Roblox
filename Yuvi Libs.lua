@@ -1,4 +1,4 @@
--- YUVI Hub
+-- YUVI Libs
 
 task.defer(function()
     local LS = game:GetService("LocalizationService")
