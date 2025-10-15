@@ -16,9 +16,8 @@ Copy the code below and paste it into your editor or executor:
 ```lua
 local Yv = loadstring(game:HttpGet("https://raw.githubusercontent.com/kambing-62826/Yuvi-UI-Libs-Roblox/refs/heads/roblox/Yuvi%20Libs.lua"))()
 ```
-## 💡 Catatan:
-Di dalam loadstring sebenarnya sudah ada fitur Notify, jadi bagian berikut ini hanya contoh tambahan — tidak wajib digunakan.
-- Salin kode
+## 💡 Note:
+Loadstring already has a Notify feature, so the following section is just an additional example-it's not mandatory.
 ```lua
 local StarterGui = game:GetService("StarterGui")
 local featureRunning = false
@@ -32,14 +31,13 @@ end
 ```
 
 ## ⚙️ Tabs
-- Membuat tab utama di UI:
-- Salin kode
+- Create main tab in UI:
 ```lua
 local MainTab = Yv:createTab("Main")
 ```
 
 ## 🗂️ Section
-- Membuat grup konten di dalam tab dengan judul section:
+- Create content goups within tabs with titles:
 ```lua
 Salin kode
 MainTab:createSection({
@@ -50,7 +48,7 @@ MainTab:createSection({
 
 ## TextBox
 ```lua
-ainTab:createTextbox({
+MainTab:createTextbox({
     Placeholder = "Search...",
     Callback = function(value)
         print("User typed:", value)
@@ -107,7 +105,7 @@ print(picker:GetColor())
 ```
 
 ## 🔘 Toggle
-- Contoh pembuatan toggle sederhana:
+- Example of making a simple toggle:
 ```lua
 Salin kode
 MainTab:createToggle({
@@ -122,7 +120,7 @@ MainTab:createToggle({
 ```
 
 ## 🖱️ Button
-Contoh tombol (button):
+- Button exmplae:
 ```lua
 Salin kode
 MainTab:createButton({
@@ -135,7 +133,7 @@ MainTab:createButton({
 ```
 
 ## 🎚️ Slider
-- Contoh slider:
+- Slider example:
 ```lua
 Salin kode
 MainTab:createSlider({
@@ -151,7 +149,7 @@ MainTab:createSlider({
 ```
 
 ## 🧾 Dropdown
-- Contoh dropdown sederhana:
+- Simple Dropdown example:
 ```lua
 Salin kode
 MainTab:createDropdown({
@@ -165,8 +163,8 @@ MainTab:createDropdown({
 })
 ```
 
-## 🎨 Fitur Tambahan: Theme
-- Kamu juga bisa menambahkan dropdown khusus untuk mengganti tema:
+## 🎨 Additional features: Theme
+- You can also add a custom Dropdown to change the theme:
 ```lua
 Salin kode
 -- 🎨 UI Theme
@@ -194,7 +192,7 @@ MainTab:createDropdown({
 ```
 
 ## ⌨️ Keybind
-- Contoh keybind (menjalankan fungsi saat tombol ditekan):
+- Keybind example (Runs a function when a key is pressed):
 ```lua
 Salin kode
 MainTab:createKeybind({
@@ -207,7 +205,7 @@ MainTab:createKeybind({
 })
 ```
 
-## 📘 Catatan Akhir
+## 📘 Last Note
 This project is for personal study and experimentation only.
 
 Do not use the main account.
