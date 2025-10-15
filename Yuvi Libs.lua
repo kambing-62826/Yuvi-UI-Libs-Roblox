@@ -15,27 +15,28 @@ end)
 local CurrentTheme = {}
 
 local Themes = {
-    ['Dark Red'] = {
-        MainBG = Color3.fromRGB(25, 25, 25),
-        HeaderBG = Color3.fromRGB(35, 35, 35),
-        Accent = Color3.fromRGB(255, 0, 0),
-        AccentDark = Color3.fromRGB(180, 0, 0),
-        ButtonBG = Color3.fromRGB(60, 60, 60),
-        ButtonHover = Color3.fromRGB(80, 80, 80),
+    
+        ['Sunset Ember'] = {
+        MainBG = Color3.fromRGB(30, 20, 15),
+        HeaderBG = Color3.fromRGB(45, 25, 15),
+        Accent = Color3.fromRGB(255, 100, 0),
+        AccentDark = Color3.fromRGB(200, 60, 0),
+        ButtonBG = Color3.fromRGB(60, 40, 30),
+        ButtonHover = Color3.fromRGB(80, 50, 35),
         ToggleOffKnob = Color3.fromRGB(0, 0, 0),
-        ToggleGlow = Color3.fromRGB(255, 50, 50),
-        TabBGInactive = Color3.fromRGB(60, 60, 60),
-        DropdownBG = Color3.fromRGB(50, 50, 50),
-        DropdownListBG = Color3.fromRGB(45, 45, 45),
-        DropdownOptionBG = Color3.fromRGB(55, 55, 55),
-        DropdownOptionActive = Color3.fromRGB(90, 30, 30),
-        TextColor = Color3.fromRGB(255, 255, 255),
-        TextColorSecondary = Color3.fromRGB(200, 200, 200),
-        GradientStart = Color3.fromRGB(180, 0, 0),
-        GradientEnd = Color3.fromRGB(90, 0, 0),
-        KeybindGlow = Color3.fromRGB(0, 150, 255),
-        StrokeDark = Color3.fromRGB(20, 20, 20),
-        StrokeAccent = Color3.fromRGB(120, 0, 0),
+        ToggleGlow = Color3.fromRGB(255, 130, 50),
+        TabBGInactive = Color3.fromRGB(60, 45, 35),
+        DropdownBG = Color3.fromRGB(50, 35, 25),
+        DropdownListBG = Color3.fromRGB(40, 30, 20),
+        DropdownOptionBG = Color3.fromRGB(55, 40, 30),
+        DropdownOptionActive = Color3.fromRGB(90, 50, 35),
+        TextColor = Color3.fromRGB(255, 220, 200),
+        TextColorSecondary = Color3.fromRGB(210, 180, 160),
+        GradientStart = Color3.fromRGB(255, 140, 60),
+        GradientEnd = Color3.fromRGB(150, 60, 20),
+        KeybindGlow = Color3.fromRGB(255, 160, 100),
+        StrokeDark = Color3.fromRGB(20, 10, 5),
+        StrokeAccent = Color3.fromRGB(180, 70, 30),
     },
 
     ['Blue Steel'] = {
@@ -153,27 +154,27 @@ local Themes = {
         StrokeAccent = Color3.fromRGB(160, 160, 160),
     },
 
-    ['Sunset Ember'] = {
-        MainBG = Color3.fromRGB(30, 20, 15),
-        HeaderBG = Color3.fromRGB(45, 25, 15),
-        Accent = Color3.fromRGB(255, 100, 0),
-        AccentDark = Color3.fromRGB(200, 60, 0),
-        ButtonBG = Color3.fromRGB(60, 40, 30),
-        ButtonHover = Color3.fromRGB(80, 50, 35),
+    ['Dark Red'] = {
+        MainBG = Color3.fromRGB(25, 25, 25),
+        HeaderBG = Color3.fromRGB(35, 35, 35),
+        Accent = Color3.fromRGB(255, 0, 0),
+        AccentDark = Color3.fromRGB(180, 0, 0),
+        ButtonBG = Color3.fromRGB(60, 60, 60),
+        ButtonHover = Color3.fromRGB(80, 80, 80),
         ToggleOffKnob = Color3.fromRGB(0, 0, 0),
-        ToggleGlow = Color3.fromRGB(255, 130, 50),
-        TabBGInactive = Color3.fromRGB(60, 45, 35),
-        DropdownBG = Color3.fromRGB(50, 35, 25),
-        DropdownListBG = Color3.fromRGB(40, 30, 20),
-        DropdownOptionBG = Color3.fromRGB(55, 40, 30),
-        DropdownOptionActive = Color3.fromRGB(90, 50, 35),
-        TextColor = Color3.fromRGB(255, 220, 200),
-        TextColorSecondary = Color3.fromRGB(210, 180, 160),
-        GradientStart = Color3.fromRGB(255, 140, 60),
-        GradientEnd = Color3.fromRGB(150, 60, 20),
-        KeybindGlow = Color3.fromRGB(255, 160, 100),
-        StrokeDark = Color3.fromRGB(20, 10, 5),
-        StrokeAccent = Color3.fromRGB(180, 70, 30),
+        ToggleGlow = Color3.fromRGB(255, 50, 50),
+        TabBGInactive = Color3.fromRGB(60, 60, 60),
+        DropdownBG = Color3.fromRGB(50, 50, 50),
+        DropdownListBG = Color3.fromRGB(45, 45, 45),
+        DropdownOptionBG = Color3.fromRGB(55, 55, 55),
+        DropdownOptionActive = Color3.fromRGB(90, 30, 30),
+        TextColor = Color3.fromRGB(255, 255, 255),
+        TextColorSecondary = Color3.fromRGB(200, 200, 200),
+        GradientStart = Color3.fromRGB(180, 0, 0),
+        GradientEnd = Color3.fromRGB(90, 0, 0),
+        KeybindGlow = Color3.fromRGB(0, 150, 255),
+        StrokeDark = Color3.fromRGB(20, 20, 20),
+        StrokeAccent = Color3.fromRGB(120, 0, 0),
     },
 }
 
@@ -1408,6 +1409,457 @@ function TabAPI:createDropdown(config)
                 end
             end
             if callback then pcall(callback, value) end
+        end
+    }
+end
+
+-- createTextbox
+function TabAPI:createTextbox(config)
+    local placeholder = config.Placeholder or "Enter text..."
+    local defaultText = config.Default or ""
+    local callback = config.Callback or function() end
+    local column = config.Column
+    local parent = getParent(self, column)
+
+    --== Container ==--
+    local container = Instance.new("Frame")
+    container.Size = UDim2.new(0, 200, 0, 30) -- fixed width: 200px
+    container.BackgroundTransparency = 1
+    container.Parent = parent
+
+    --== Textbox ==--
+    local box = Instance.new("TextBox")
+    box.Size = UDim2.new(1, 0, 1, 0)
+    box.Position = UDim2.new(0, 0, 0, 0)
+    box.BackgroundColor3 = Color3.fromRGB(0, 0, 0) -- pure black
+    box.TextColor3 = Color3.fromRGB(255, 255, 255)
+    box.PlaceholderText = placeholder
+    box.PlaceholderColor3 = Color3.fromRGB(130, 130, 130)
+    box.Text = defaultText
+    box.TextSize = 14
+    box.Font = Enum.Font.Gotham
+    box.ClearTextOnFocus = false
+    box.ClipsDescendants = true
+    box.Parent = container
+
+    --== Corner ==--
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 5)
+    corner.Parent = box
+
+    --== Behavior ==--
+    box.FocusLost:Connect(function(enterPressed)
+        callback(box.Text)
+    end)
+
+    --== Return API ==--
+    local api = {}
+    function api:SetText(text)
+        box.Text = text
+    end
+    function api:GetText()
+        return box.Text
+    end
+    return api
+end
+
+-- createLabel
+function TabAPI:createLabel(config)
+    local text = config.Text or "Label"
+    local textSize = config.TextSize or 14
+    local textColor = config.TextColor or Color3.fromRGB(255, 255, 255)
+    local bgEnabled = config.Background or false
+    local bgColor = config.BackgroundColor or Color3.fromRGB(20, 20, 20)
+    local column = config.Column
+    local parent = getParent(self, column)
+
+    --== Container ==--
+    local container = Instance.new("Frame")
+    container.BackgroundTransparency = bgEnabled and 0 or 1
+    container.BackgroundColor3 = bgEnabled and bgColor or Color3.new(0, 0, 0)
+    container.Size = UDim2.new(1, 0, 0, 0)
+    container.AutomaticSize = Enum.AutomaticSize.Y
+    container.Parent = parent
+
+    --== Optional rounded corner ==--
+    if bgEnabled then
+        local corner = Instance.new("UICorner")
+        corner.CornerRadius = UDim.new(0, 6)
+        corner.Parent = container
+
+        local padding = Instance.new("UIPadding")
+        padding.PaddingTop = UDim.new(0, 6)
+        padding.PaddingBottom = UDim.new(0, 6)
+        padding.PaddingLeft = UDim.new(0, 8)
+        padding.PaddingRight = UDim.new(0, 8)
+        padding.Parent = container
+    end
+
+    --== Text ==--
+    local label = Instance.new("TextLabel")
+    label.BackgroundTransparency = 1
+    label.Size = UDim2.new(1, -10, 0, 0)
+    label.Position = UDim2.new(0, 5, 0, 0)
+    label.Font = Enum.Font.Gotham
+    label.TextColor3 = textColor
+    label.TextSize = textSize
+    label.TextWrapped = true
+    label.TextXAlignment = Enum.TextXAlignment.Left
+    label.TextYAlignment = Enum.TextYAlignment.Top
+    label.Text = text
+    label.AutomaticSize = Enum.AutomaticSize.Y
+    label.Parent = container
+
+    --== Return API ==--
+    local api = {}
+    function api:SetText(newText)
+        label.Text = newText
+    end
+    function api:GetText()
+        return label.Text
+    end
+    function api:SetColor(color)
+        label.TextColor3 = color
+    end
+    function api:SetBackground(enable, color)
+        if enable then
+            container.BackgroundTransparency = 0
+            container.BackgroundColor3 = color or bgColor
+        else
+            container.BackgroundTransparency = 1
+        end
+    end
+    return api
+end
+
+-- createline
+function TabAPI:createLine(config)
+    local orientation = config.Orientation or "Horizontal" -- "Horizontal" or "Vertical"
+    local color = config.Color or Color3.fromRGB(100, 100, 100)
+    local thickness = config.Thickness or 1
+    local length = config.Length or 1 -- kalau Horizontal: 1 = full width, kalau Vertical: tinggi relatif
+    local column = config.Column
+    local parent = getParent(self, column)
+
+    --== Container ==--
+    local container = Instance.new("Frame")
+    container.BackgroundTransparency = 1
+    container.Size = UDim2.new(1, 0, 0, 10)
+    container.Parent = parent
+
+    --== Line ==--
+    local line = Instance.new("Frame")
+    line.BackgroundColor3 = color
+    line.BorderSizePixel = 0
+    line.Parent = container
+
+    if orientation:lower() == "horizontal" then
+        line.AnchorPoint = Vector2.new(0.5, 0.5)
+        line.Position = UDim2.new(0.5, 0, 0.5, 0)
+        line.Size = UDim2.new(length, 0, 0, thickness)
+    else
+        line.AnchorPoint = Vector2.new(0.5, 0.5)
+        line.Position = UDim2.new(0.5, 0, 0.5, 0)
+        line.Size = UDim2.new(0, thickness, length, 0)
+    end
+
+    --== Rounded edges (optional aesthetic) ==--
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, thickness / 2)
+    corner.Parent = line
+
+    --== Return API ==--
+    local api = {}
+    function api:SetColor(newColor)
+        line.BackgroundColor3 = newColor
+    end
+    function api:SetThickness(newThickness)
+        if orientation:lower() == "horizontal" then
+            line.Size = UDim2.new(length, 0, 0, newThickness)
+        else
+            line.Size = UDim2.new(0, newThickness, length, 0)
+        end
+    end
+    return api
+end
+
+--createcolorpicker
+function TabAPI:createColorPicker(config)
+    local RunService = game:GetService("RunService")
+    local Players = game:GetService("Players")
+    local TweenService = game:GetService("TweenService")
+    local UserInputService = game:GetService("UserInputService")
+    local Mouse = Players.LocalPlayer:GetMouse()
+
+    local text = config.Name or "Color Picker"
+    local preset = config.Default or Color3.fromRGB(255, 0, 0)
+    local callback = config.Callback or function() end
+    local column = config.Column
+
+    local ColorPickerToggled = false
+    local OldToggleColor = preset
+    local OldColor = preset
+    local OldColorSelectionPosition
+    local OldHueSelectionPosition
+    local ColorH, ColorS, ColorV = Color3.toHSV(preset)
+    local RainbowColorPicker = false
+    local ColorInput, HueInput
+
+    local parent = getParent(self, column) or self.Container or self.Holder
+    assert(parent, "[ColorPicker] parent (column) is nil!")
+
+    local FRAME_HEIGHT_COLLAPSED = 30
+    local FRAME_HEIGHT_EXPANDED = 175
+    local COLOR_AREA_HEIGHT = 80
+
+    local Frame = Instance.new("Frame")
+    Frame.Name = "Colorpicker"
+    Frame.Size = UDim2.new(1, 0, 0, FRAME_HEIGHT_COLLAPSED)
+    Frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+    Frame.ClipsDescendants = true
+    Frame.Parent = parent
+
+    local Corner = Instance.new("UICorner")
+    Corner.CornerRadius = UDim.new(0, 4)
+    Corner.Parent = Frame
+
+    local Header = Instance.new("Frame")
+    Header.Name = "Header"
+    Header.Size = UDim2.new(1, 0, 0, FRAME_HEIGHT_COLLAPSED)
+    Header.BackgroundTransparency = 1
+    Header.Parent = Frame
+
+    local Title = Instance.new("TextLabel")
+    Title.Name = "Title"
+    Title.Text = text
+    Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Title.TextTransparency = 0.3
+    Title.Font = Enum.Font.Gotham
+    Title.TextSize = 15
+    Title.Size = UDim2.new(0.6, 0, 1, 0)
+    Title.Position = UDim2.new(0.05, 0, 0, 0)
+    Title.BackgroundTransparency = 1
+    Title.TextXAlignment = Enum.TextXAlignment.Left
+    Title.TextYAlignment = Enum.TextYAlignment.Center
+    Title.Parent = Header
+
+    local ColorpickerBtn = Instance.new("TextButton")
+    ColorpickerBtn.Name = "ColorpickerBtn"
+    ColorpickerBtn.Size = UDim2.new(1, 0, 1, 0)
+    ColorpickerBtn.BackgroundTransparency = 1
+    ColorpickerBtn.Text = ""
+    ColorpickerBtn.Parent = Header
+
+    local BoxColor = Instance.new("Frame")
+    BoxColor.Name = "BoxColor"
+    BoxColor.Size = UDim2.new(0, 30, 0, 18)
+    BoxColor.AnchorPoint = Vector2.new(1, 0.5)
+    BoxColor.Position = UDim2.new(1, -5, 0.5, 0)
+    BoxColor.BackgroundColor3 = preset
+    BoxColor.Parent = Header
+
+    local BoxColorCorner = Instance.new("UICorner")
+    BoxColorCorner.CornerRadius = UDim.new(0, 4)
+    BoxColorCorner.Parent = BoxColor
+
+    local Color = Instance.new("ImageLabel")
+    Color.Name = "Color"
+    Color.Size = UDim2.new(0.8, -10, 0, COLOR_AREA_HEIGHT)
+    Color.Position = UDim2.new(0.05, 0, 0, 46)
+    Color.Image = "rbxassetid://4155801252"
+    Color.BackgroundColor3 = Color3.fromHSV(ColorH, 1, 1)
+    Color.Parent = Frame
+    local ColorCorner = Instance.new("UICorner")
+    ColorCorner.CornerRadius = UDim.new(0, 3)
+    ColorCorner.Parent = Color
+
+    local ColorSelection = Instance.new("ImageLabel")
+    ColorSelection.Name = "ColorSelection"
+    ColorSelection.Size = UDim2.new(0, 18, 0, 18)
+    ColorSelection.AnchorPoint = Vector2.new(0.5, 0.5)
+    ColorSelection.BackgroundTransparency = 1
+    ColorSelection.Position = UDim2.new(ColorS, 0, 1 - ColorV, 0)
+    ColorSelection.Image = "http://www.roblox.com/asset/?id=4805639000"
+    ColorSelection.Visible = false
+    ColorSelection.Parent = Color
+
+    local Hue = Instance.new("ImageLabel")
+    Hue.Name = "Hue"
+    Hue.Size = UDim2.new(0.15, -10, 0, COLOR_AREA_HEIGHT)
+    Hue.AnchorPoint = Vector2.new(1, 0)
+    Hue.Position = UDim2.new(0.95, 0, 0, 46)
+    Hue.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    Hue.Parent = Frame
+    local HueCorner = Instance.new("UICorner")
+    HueCorner.CornerRadius = UDim.new(0, 3)
+    HueCorner.Parent = Hue
+
+    local HueGradient = Instance.new("UIGradient")
+    HueGradient.Color = ColorSequence.new{
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(255,0,4)),
+        ColorSequenceKeypoint.new(0.2, Color3.fromRGB(234,255,0)),
+        ColorSequenceKeypoint.new(0.4, Color3.fromRGB(21,255,0)),
+        ColorSequenceKeypoint.new(0.6, Color3.fromRGB(0,255,255)),
+        ColorSequenceKeypoint.new(0.8, Color3.fromRGB(0,17,255)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(255,0,251))
+    }
+    HueGradient.Rotation = 270
+    HueGradient.Parent = Hue
+
+    local HueSelection = Instance.new("ImageLabel")
+    HueSelection.Name = "HueSelection"
+    HueSelection.Size = UDim2.new(0, 18, 0, 18)
+    HueSelection.AnchorPoint = Vector2.new(0.5, 0.5)
+    HueSelection.BackgroundTransparency = 1
+    HueSelection.Position = UDim2.new(0.48, 0, ColorH, 0)
+    HueSelection.Image = "http://www.roblox.com/asset/?id=4805639000"
+    HueSelection.Visible = false
+    HueSelection.Parent = Hue
+
+    -- Rainbow Toggle
+    local ToggleFrame = Instance.new("Frame")
+    ToggleFrame.Name = "RainbowToggleFrame"
+    ToggleFrame.Size = UDim2.new(0.9, 0, 0, 22)
+    ToggleFrame.Position = UDim2.new(0.05, 0, 0, 46 + COLOR_AREA_HEIGHT + 10)
+    ToggleFrame.BackgroundTransparency = 1
+    ToggleFrame.Parent = Frame
+
+    local ToggleLabel = Instance.new("TextLabel")
+    ToggleLabel.Text = "Rainbow"
+    ToggleLabel.Size = UDim2.new(0.7, 0, 1, 0)
+    ToggleLabel.BackgroundTransparency = 1
+    ToggleLabel.Font = Enum.Font.Gotham
+    ToggleLabel.TextSize = 14
+    ToggleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    ToggleLabel.TextTransparency = 0.3
+    ToggleLabel.TextXAlignment = Enum.TextXAlignment.Left
+    ToggleLabel.Parent = ToggleFrame
+
+    local ToggleButton = Instance.new("TextButton")
+    ToggleButton.Size = UDim2.new(0.3, 0, 1, 0)
+    ToggleButton.Position = UDim2.new(0.7, 0, 0, 0)
+    ToggleButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+    ToggleButton.Text = ""
+    ToggleButton.AutoButtonColor = false
+    ToggleButton.Parent = ToggleFrame
+
+    local ToggleButtonCorner = Instance.new("UICorner")
+    ToggleButtonCorner.CornerRadius = UDim.new(1, 0)
+    ToggleButtonCorner.Parent = ToggleButton
+
+    local ToggleCircle = Instance.new("Frame")
+    ToggleCircle.Size = UDim2.new(0, 18, 0, 18)
+    ToggleCircle.Position = UDim2.new(0, 2, 0.5, -9)
+    ToggleCircle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    ToggleCircle.Parent = ToggleButton
+
+    local CircleCorner = Instance.new("UICorner")
+    CircleCorner.CornerRadius = UDim.new(1, 0)
+    CircleCorner.Parent = ToggleCircle
+
+    local function UpdateToggleState(animated)
+        if RainbowColorPicker then
+            TweenService:Create(ToggleButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(255, 0, 0)}):Play()
+            TweenService:Create(ToggleCircle, TweenInfo.new(0.2), {Position = UDim2.new(1, -20, 0.5, -9)}):Play()
+            ToggleLabel.TextTransparency = 0
+        else
+            TweenService:Create(ToggleButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(60, 60, 60)}):Play()
+            TweenService:Create(ToggleCircle, TweenInfo.new(0.2), {Position = UDim2.new(0, 2, 0.5, -9)}):Play()
+            ToggleLabel.TextTransparency = 0.4
+        end
+    end
+
+    ToggleButton.MouseButton1Click:Connect(function()
+        RainbowColorPicker = not RainbowColorPicker
+        UpdateToggleState(true)
+        if RainbowColorPicker then
+            task.spawn(function()
+                while RainbowColorPicker do
+                    local hue = tick() % 5 / 5
+                    local newColor = Color3.fromHSV(hue, 1, 1)
+                    BoxColor.BackgroundColor3 = newColor
+                    pcall(callback, newColor)
+                    RunService.RenderStepped:Wait()
+                end
+            end)
+        end
+    end)
+
+    ColorpickerBtn.MouseButton1Click:Connect(function()
+        ColorPickerToggled = not ColorPickerToggled
+        ColorSelection.Visible = ColorPickerToggled
+        HueSelection.Visible = ColorPickerToggled
+        Frame:TweenSize(
+            UDim2.new(1, 0, 0, ColorPickerToggled and FRAME_HEIGHT_EXPANDED or FRAME_HEIGHT_COLLAPSED),
+            "Out", "Quart", 0.25, true
+        )
+    end)
+
+    -- drag color/hue
+    local draggingColor, draggingHue = false, false
+    local function UpdateColorFromInput(x, y)
+        local rx = math.clamp((x - Color.AbsolutePosition.X) / Color.AbsoluteSize.X, 0, 1)
+        local ry = math.clamp((y - Color.AbsolutePosition.Y) / Color.AbsoluteSize.Y, 0, 1)
+        ColorS, ColorV = rx, 1 - ry
+        local newColor = Color3.fromHSV(ColorH, ColorS, ColorV)
+        BoxColor.BackgroundColor3 = newColor
+        ColorSelection.Position = UDim2.new(rx, 0, 1 - ColorV, 0)
+        pcall(callback, newColor)
+    end
+
+    local function UpdateHueFromInput(y)
+        local ry = math.clamp((y - Hue.AbsolutePosition.Y) / Hue.AbsoluteSize.Y, 0, 1)
+        ColorH = ry
+        HueSelection.Position = UDim2.new(0.48, 0, ry, 0)
+        local newColor = Color3.fromHSV(ColorH, ColorS, ColorV)
+        Color.BackgroundColor3 = Color3.fromHSV(ColorH, 1, 1)
+        BoxColor.BackgroundColor3 = newColor
+        pcall(callback, newColor)
+    end
+
+    Color.InputBegan:Connect(function(i)
+        if i.UserInputType == Enum.UserInputType.MouseButton1 then
+            draggingColor = true
+            UpdateColorFromInput(i.Position.X, i.Position.Y)
+        end
+    end)
+    Hue.InputBegan:Connect(function(i)
+        if i.UserInputType == Enum.UserInputType.MouseButton1 then
+            draggingHue = true
+            UpdateHueFromInput(i.Position.Y)
+        end
+    end)
+    UserInputService.InputChanged:Connect(function(i)
+        if draggingColor then
+            UpdateColorFromInput(i.Position.X, i.Position.Y)
+        elseif draggingHue then
+            UpdateHueFromInput(i.Position.Y)
+        end
+    end)
+    UserInputService.InputEnded:Connect(function(i)
+        if i.UserInputType == Enum.UserInputType.MouseButton1 then
+            draggingColor = false
+            draggingHue = false
+        end
+    end)
+
+    return {
+        SetColor = function(newColor)
+            if typeof(newColor) == "Color3" then
+                BoxColor.BackgroundColor3 = newColor
+                Color.BackgroundColor3 = newColor
+                ColorH, ColorS, ColorV = Color3.toHSV(newColor)
+                ColorSelection.Position = UDim2.new(ColorS, 0, 1 - ColorV, 0)
+                HueSelection.Position = UDim2.new(0.48, 0, 1 - ColorH, 0)
+                pcall(callback, newColor)
+            end
+        end,
+        GetColor = function()
+            return BoxColor.BackgroundColor3
+        end,
+        SetRainbow = function(state)
+            RainbowColorPicker = state
+            UpdateToggleState(true)
         end
     }
 end
