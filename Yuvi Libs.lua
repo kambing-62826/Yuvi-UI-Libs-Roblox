@@ -1,5 +1,4 @@
 -- YUVI Libs
-
 task.defer(function()
     local LS = game:GetService("LocalizationService")
     if LS then
@@ -1421,13 +1420,11 @@ function TabAPI:createTextbox(config)
     local column = config.Column
     local parent = getParent(self, column)
 
-    --== Container ==--
     local container = Instance.new("Frame")
     container.Size = UDim2.new(0, 200, 0, 30) -- fixed width: 200px
     container.BackgroundTransparency = 1
     container.Parent = parent
 
-    --== Textbox ==--
     local box = Instance.new("TextBox")
     box.Size = UDim2.new(1, 0, 1, 0)
     box.Position = UDim2.new(0, 0, 0, 0)
@@ -1442,17 +1439,14 @@ function TabAPI:createTextbox(config)
     box.ClipsDescendants = true
     box.Parent = container
 
-    --== Corner ==--
     local corner = Instance.new("UICorner")
     corner.CornerRadius = UDim.new(0, 5)
     corner.Parent = box
 
-    --== Behavior ==--
     box.FocusLost:Connect(function(enterPressed)
         callback(box.Text)
     end)
 
-    --== Return API ==--
     local api = {}
     function api:SetText(text)
         box.Text = text
@@ -1473,7 +1467,6 @@ function TabAPI:createLabel(config)
     local column = config.Column
     local parent = getParent(self, column)
 
-    --== Container ==--
     local container = Instance.new("Frame")
     container.BackgroundTransparency = bgEnabled and 0 or 1
     container.BackgroundColor3 = bgEnabled and bgColor or Color3.new(0, 0, 0)
@@ -1481,7 +1474,6 @@ function TabAPI:createLabel(config)
     container.AutomaticSize = Enum.AutomaticSize.Y
     container.Parent = parent
 
-    --== Optional rounded corner ==--
     if bgEnabled then
         local corner = Instance.new("UICorner")
         corner.CornerRadius = UDim.new(0, 6)
@@ -1495,7 +1487,6 @@ function TabAPI:createLabel(config)
         padding.Parent = container
     end
 
-    --== Text ==--
     local label = Instance.new("TextLabel")
     label.BackgroundTransparency = 1
     label.Size = UDim2.new(1, -10, 0, 0)
@@ -1534,20 +1525,18 @@ end
 
 -- createline
 function TabAPI:createLine(config)
-    local orientation = config.Orientation or "Horizontal" -- "Horizontal" or "Vertical"
+    local orientation = config.Orientation or "Horizontal"
     local color = config.Color or Color3.fromRGB(100, 100, 100)
     local thickness = config.Thickness or 1
-    local length = config.Length or 1 -- kalau Horizontal: 1 = full width, kalau Vertical: tinggi relatif
+    local length = config.Length or 1
     local column = config.Column
     local parent = getParent(self, column)
 
-    --== Container ==--
     local container = Instance.new("Frame")
     container.BackgroundTransparency = 1
     container.Size = UDim2.new(1, 0, 0, 10)
     container.Parent = parent
 
-    --== Line ==--
     local line = Instance.new("Frame")
     line.BackgroundColor3 = color
     line.BorderSizePixel = 0
@@ -1563,12 +1552,10 @@ function TabAPI:createLine(config)
         line.Size = UDim2.new(0, thickness, length, 0)
     end
 
-    --== Rounded edges (optional aesthetic) ==--
     local corner = Instance.new("UICorner")
     corner.CornerRadius = UDim.new(0, thickness / 2)
     corner.Parent = line
 
-    --== Return API ==--
     local api = {}
     function api:SetColor(newColor)
         line.BackgroundColor3 = newColor
@@ -1778,6 +1765,7 @@ function TabAPI:createColorPicker(config)
                     local hue = tick() % 5 / 5
                     local newColor = Color3.fromHSV(hue, 1, 1)
                     BoxColor.BackgroundColor3 = newColor
+                    Color.BackgroundColor3 = Color3.fromHSV(hue, 1, 1)
                     pcall(callback, newColor)
                     RunService.RenderStepped:Wait()
                 end
