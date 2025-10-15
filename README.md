@@ -106,7 +106,6 @@ print(picker:GetColor())
 ## 🔘 Toggle
 - Example of making a simple toggle:
 ```lua
-Salin kode
 MainTab:createToggle({
     Name = "Example Toggle",
     CurrentValue = false,
@@ -121,7 +120,6 @@ MainTab:createToggle({
 ## 🖱️ Button
 - Button exmplae:
 ```lua
-Salin kode
 MainTab:createButton({
     Name = "Example Button",
     Column = 1,
@@ -134,7 +132,6 @@ MainTab:createButton({
 ## 🎚️ Slider
 - Slider example:
 ```lua
-Salin kode
 MainTab:createSlider({
     Name = "Example Slider",
     Min = 0,
@@ -150,7 +147,6 @@ MainTab:createSlider({
 ## 🧾 Dropdown
 - Simple Dropdown example:
 ```lua
-Salin kode
 MainTab:createDropdown({
     Name = "Example Dropdown",
     Options = {"Option 1", "Option 2", "Option 3"},
@@ -165,7 +161,6 @@ MainTab:createDropdown({
 ## 🎨 Additional features: Theme
 - You can also add a custom Dropdown to change the theme:
 ```lua
-Salin kode
 -- 🎨 UI Theme
 local ThemeNames = {}
 for name in pairs(Yv.Themes or {}) do
@@ -193,7 +188,6 @@ MainTab:createDropdown({
 ## ⌨️ Keybind
 - Keybind example (Runs a function when a key is pressed):
 ```lua
-Salin kode
 MainTab:createKeybind({
     Name = "Example Keybind",
     Default = Enum.KeyCode.F, -- default: F
