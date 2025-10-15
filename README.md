@@ -39,7 +39,6 @@ local MainTab = Yv:createTab("Main")
 ## 🗂️ Section
 - Create content goups within tabs with titles:
 ```lua
-Salin kode
 MainTab:createSection({
     Name = "Example Section",
     Column = 1 -- ubah sesuai kolom (1-2)
