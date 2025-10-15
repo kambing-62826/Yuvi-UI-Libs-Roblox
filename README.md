@@ -1,17 +1,17 @@
-# 🧪 Masih Tahap Uji Coba
-Sebenarnya aku membuat ini karena sedang **bosan saja**, hihi 😆  
-Proyek ini masih dalam tahap **eksperimen**, jadi harap maklum kalau masih banyak yang perlu diperbaiki.
+# 🧪 Still in the trial stage
+I actually made this out of boredom, haha 😆  
+This project stages, so please understand that there are still many things that need to be fixed.
 
 ---
 
-# ⚠️ Deskripsi
-Script ini termasuk **kode exploit**, jadi **gunakan dengan risiko sendiri**.  
-Jika akun kamu terkena banned, **jangan salahkan siapa pun selain dirimu sendiri**, karena kamu memilih untuk menjalankan kode exploit ini.
+# ⚠️ Description
+This script contains exploit code, so use it at your own risk.
+If your account gets **Banned**, blame no one but yourself, becaues you chose to run this exploit code.
 
 ---
 
-## 🚀 Cara Pakai
-Salin kode di bawah ini dan tempel ke editor executor kamu:
+## 🚀 How to use?
+Copy the code below and paste it into your editor or executor:
 
 ```lua
 local Yv = loadstring(game:HttpGet("https://raw.githubusercontent.com/kambing-62826/Yuvi-UI-Libs-Roblox/refs/heads/roblox/Yuvi%20Libs.lua"))()
@@ -46,6 +46,64 @@ MainTab:createSection({
     Name = "Example Section",
     Column = 1 -- ubah sesuai kolom (1-2)
 })
+```
+
+## TextBox
+```lua
+ainTab:createTextbox({
+    Placeholder = "Search...",
+    Callback = function(value)
+        print("User typed:", value)
+    end,
+    Column = 1
+})
+
+```
+
+## Label
+- no background
+```lua
+MainTab:createLabel({
+    Text = "This is a plain label text.",
+    TextSize = 14,
+    Column = 1
+})
+```
+- this one uses a background
+```lua
+MainTab:createLabel({
+    Text = "Remember to save your settings after editing!",
+    TextSize = 14,
+    Background = true,
+    BackgroundColor = Color3.fromRGB(0, 0, 0),
+    Column = 1
+})
+```
+
+## Line
+```lua
+MainTab:createLine({
+    Orientation = "Horizontal",
+    Color = Color3.fromRGB(80, 80, 80),
+    Thickness = 1,
+    Length = 1,
+    Column = 1
+})
+```
+
+## Color Picker
+- pc only
+```lua
+MainTab:createColorPicker({
+    Name = "Accent",
+    Default = Color3.fromRGB(255,0,0),
+    Callback = function(c) print("picked:", c) end,
+    Column = 1
+})
+
+-- set color later:
+picker:SetColor(Color3.fromRGB(0,255,0))
+print(picker:GetColor())
 ```
 
 ## 🔘 Toggle
@@ -150,11 +208,11 @@ MainTab:createKeybind({
 ```
 
 ## 📘 Catatan Akhir
-Proyek ini hanya untuk belajar dan eksperimen pribadi.
+This project is for personal study and experimentation only.
 
-Jangan gunakan di akun utama.
+Do not use the main account.
 
-Jika kamu tertarik mengembangkan lebih jauh, kamu bisa ubah, modifikasi, dan tambahkan fiturnya sendiri 😄
+If you are interested in combining it further, you can change, modify, and add your own features 😄.
 
 - Dibuat oleh: Yuvi
 - Library: Yuvi UI Libs
