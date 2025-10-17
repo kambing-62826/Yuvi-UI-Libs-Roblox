@@ -2036,4 +2036,12 @@ end
 UI.Themes = Themes
 UI.CurrentTheme = CurrentTheme
 
+function UI:ToggleGUI()
+	local E = self._Elements
+	if not E.MainFrame or not E.PopupBtn then return end
+	local minimized = not E.MainFrame.Visible
+	E.MainFrame.Visible = not minimized
+	E.PopupBtn.Visible = minimized
+end
+
 return UI
