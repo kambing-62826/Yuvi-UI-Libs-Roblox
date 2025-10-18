@@ -2050,24 +2050,30 @@ UserInputService.InputBegan:Connect(function(input, processed)
 					end)
 				end
 
-if name:lower():find("openui") then
-	local gui = player:WaitForChild("PlayerGui"):FindFirstChild("YuviHub")
-	if gui then
-		local frame = gui:FindFirstChild("MainFrame", true)
-		local popup = gui:FindFirstChild("PopupBtn", true)
+				if name:lower():find("openui") then
+					local gui = player:WaitForChild("PlayerGui"):FindFirstChild("YuviHub")
+					if gui then
+						local frame = gui:FindFirstChild("MainFrame", true)
+						local popup = gui:FindFirstChild("PopupBtn", true)
 
-		if frame and popup then
-			local currentlyVisible = frame.Visible
+						if frame and popup then
+							local currentlyVisible = frame.Visible
 
-			if currentlyVisible then
-				frame.Visible = false
-				popup.Visible = true
-			else
-				frame.Visible = true
-				popup.Visible = false
-			end
-		end
-	end
-end
+							if currentlyVisible then
+								frame.Visible = false
+								popup.Visible = true
+							else
+								frame.Visible = true
+								popup.Visible = false
+							end
+						end
+					end
+				end 
+
+			end 
+		end 
+	end 
+end)
+
 
 
