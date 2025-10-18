@@ -514,29 +514,57 @@ if existingGui then
     existingGui:Destroy()
 end
 
+local function tryGetHiddenGui()
+    if type(gethui) == "function" then
+        local ok, gui = pcall(gethui)
+        if ok and gui then return gui end
+    end
+    if type(get_hidden_gui) == "function" then
+        local ok, gui = pcall(get_hidden_gui)
+        if ok and gui then return gui end
+    end
+    local ok, core = pcall(function() return game:GetService("CoreGui") end)
+    if ok and core then return core end
+    return nil
+end
+
+local parentTarget = tryGetHiddenGui() or PlayerGui
+
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "YuviHub"
 ScreenGui.IgnoreGuiInset = true
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Global
-ScreenGui.DisplayOrder = 999999999
 ScreenGui.ResetOnSpawn = false
-ScreenGui.Parent = TargetGui
+ScreenGui.Parent = parentTarget
 
+local function tryProtect(gui)
+    if type(syn) == "table" and type(syn.protect_gui) == "function" then
+        pcall(function() syn.protect_gui(gui) end)
+        return true
+    end
+    if type(protect_gui) == "function" then
+        pcall(function() protect_gui(gui) end)
+        return true
+    end
+    return false
+end
+pcall(function() tryProtect(ScreenGui) end)
+
+ScreenGui.DisplayOrder = 2147483647 
 local function setHighZIndex(obj)
     if obj:IsA("GuiObject") then
-        obj.ZIndex = 10000
+        pcall(function() obj.ZIndex = 2147483647 end)
     end
     for _, child in ipairs(obj:GetChildren()) do
         setHighZIndex(child)
     end
 end
-
 setHighZIndex(ScreenGui)
 
 local RunService = game:GetService("RunService")
 RunService.RenderStepped:Connect(function()
-    if ScreenGui.DisplayOrder < 999999999 then
-        ScreenGui.DisplayOrder = 999999999
+    if ScreenGui.DisplayOrder < 2147483647 then
+        ScreenGui.DisplayOrder = 2147483647
     end
 end)
 
