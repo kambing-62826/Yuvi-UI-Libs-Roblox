@@ -2043,45 +2043,6 @@ function UI:ToggleUI()
     E.PopupBtn.Visible = visible
 end
 
-UserInputService.InputBegan:Connect(function(input, processed)
-	if processed then return end
-	if input.UserInputType ~= Enum.UserInputType.Keyboard then return end
-
-	if UI and UI._keybinds then
-		for name, key in pairs(UI._keybinds) do
-			if typeof(key) == "EnumItem" and input.KeyCode == key then
-				if UI._keybindCallbacks and UI._keybindCallbacks[name] then
-					task.spawn(function()
-						local ok, err = pcall(UI._keybindCallbacks[name])
-						if not ok then warn("Keybind error for", name, ":", err) end
-					end)
-				end
-					
-				if name:lower():find("openui") then
-					local gui = player:WaitForChild("PlayerGui"):FindFirstChild("YuviHub")
-					if gui then
-						local frame = gui:FindFirstChild("MainFrame", true)
-						local popup = gui:FindFirstChild("PopupBtn", true)
-
-						if frame and popup then
-							local currentlyVisible = frame.Visible
-
-							if currentlyVisible then
-								frame.Visible = false
-								popup.Visible = true
-							else
-								frame.Visible = true
-								popup.Visible = false
-							end
-						end
-					end
-				end 
-
-			end 
-		end 
-	end 
-end)
-
 return UI
 
 
