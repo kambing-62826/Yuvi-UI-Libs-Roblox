@@ -518,18 +518,27 @@ local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "YuviHub"
 ScreenGui.IgnoreGuiInset = true
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Global
-ScreenGui.DisplayOrder = 9999
+ScreenGui.DisplayOrder = 999999999
 ScreenGui.ResetOnSpawn = false
 ScreenGui.Parent = TargetGui
 
 local function setHighZIndex(obj)
     if obj:IsA("GuiObject") then
-        obj.ZIndex = 100
+        obj.ZIndex = 10000
     end
     for _, child in ipairs(obj:GetChildren()) do
         setHighZIndex(child)
     end
 end
+
+setHighZIndex(ScreenGui)
+
+local RunService = game:GetService("RunService")
+RunService.RenderStepped:Connect(function()
+    if ScreenGui.DisplayOrder < 999999999 then
+        ScreenGui.DisplayOrder = 999999999
+    end
+end)
 
 -- MAIN FRAME
 local MainFrame = Instance.new("Frame")
