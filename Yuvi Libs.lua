@@ -2032,10 +2032,6 @@ function UI:ApplyTheme(themeName)
     applyTheme(themeName)
 end
 
-UI.Themes = Themes
-UI.CurrentTheme = CurrentTheme
-return UI
-
 UserInputService.InputBegan:Connect(function(input, processed)
 	if processed then return end
 	if input.UserInputType ~= Enum.UserInputType.Keyboard then return end
@@ -2065,3 +2061,8 @@ UserInputService.InputBegan:Connect(function(input, processed)
 		end
 	end
 end)
+
+UI.Themes = Themes
+UI.CurrentTheme = CurrentTheme
+return UI
+
