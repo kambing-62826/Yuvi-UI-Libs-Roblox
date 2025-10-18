@@ -200,7 +200,6 @@ local UserInputService = game:GetService("UserInputService")
 local StarterGui = game:GetService("StarterGui")
 local TweenService = game:GetService("TweenService")
 local RunService = game:GetService("RunService")
-local LP = Players.LocalPlayer
 local player = Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
 
@@ -2036,10 +2035,6 @@ end
 UI.Themes = Themes
 UI.CurrentTheme = CurrentTheme
 return UI
-
-local UserInputService = game:GetService("UserInputService")
-local Players = game:GetService("Players")
-local player = Players.LocalPlayer
 
 UserInputService.InputBegan:Connect(function(input, processed)
 	if processed then return end
