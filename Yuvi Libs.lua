@@ -2035,6 +2035,14 @@ end
 UI.Themes = Themes
 UI.CurrentTheme = CurrentTheme
 
+function UI:ToggleUI()
+    local E = self._Elements
+    if not E.MainFrame or not E.PopupBtn then return end
+    local visible = E.MainFrame.Visible
+    E.MainFrame.Visible = not visible
+    E.PopupBtn.Visible = visible
+end
+
 UserInputService.InputBegan:Connect(function(input, processed)
 	if processed then return end
 	if input.UserInputType ~= Enum.UserInputType.Keyboard then return end
@@ -2073,14 +2081,6 @@ UserInputService.InputBegan:Connect(function(input, processed)
 		end 
 	end 
 end)
-
-function UI:ToggleUI()
-    local E = self._Elements
-    if not E.MainFrame or not E.PopupBtn then return end
-    local visible = E.MainFrame.Visible
-    E.MainFrame.Visible = not visible
-    E.PopupBtn.Visible = visible
-end
 
 return UI
 
