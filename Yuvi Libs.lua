@@ -2034,7 +2034,6 @@ end
 
 UI.Themes = Themes
 UI.CurrentTheme = CurrentTheme
-return UI
 
 UserInputService.InputBegan:Connect(function(input, processed)
 	if processed then return end
@@ -2074,6 +2073,10 @@ UserInputService.InputBegan:Connect(function(input, processed)
 		end 
 	end 
 end)
+
+return UI
+
+
 
 
 
