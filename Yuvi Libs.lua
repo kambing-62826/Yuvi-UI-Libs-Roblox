@@ -2049,6 +2049,14 @@ UserInputService.InputBegan:Connect(function(input, processed)
 					end)
 				end
 
+					function UI:ToggleUI()
+    local E = self._Elements
+    if not E.MainFrame or not E.PopupBtn then return end
+    local visible = E.MainFrame.Visible
+    E.MainFrame.Visible = not visible
+    E.PopupBtn.Visible = visible
+end
+					
 				if name:lower():find("openui") then
 					local gui = player:WaitForChild("PlayerGui"):FindFirstChild("YuviHub")
 					if gui then
