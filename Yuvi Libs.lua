@@ -15,27 +15,27 @@ local CurrentTheme = {}
 
 local Themes = {
     
-        ['Sunset Ember'] = {
-        MainBG = Color3.fromRGB(30, 20, 15),
-        HeaderBG = Color3.fromRGB(45, 25, 15),
-        Accent = Color3.fromRGB(255, 100, 0),
-        AccentDark = Color3.fromRGB(200, 60, 0),
-        ButtonBG = Color3.fromRGB(60, 40, 30),
-        ButtonHover = Color3.fromRGB(80, 50, 35),
+    ['Dark Red'] = {
+        MainBG = Color3.fromRGB(25, 25, 25),
+        HeaderBG = Color3.fromRGB(35, 35, 35),
+        Accent = Color3.fromRGB(255, 0, 0),
+        AccentDark = Color3.fromRGB(180, 0, 0),
+        ButtonBG = Color3.fromRGB(60, 60, 60),
+        ButtonHover = Color3.fromRGB(80, 80, 80),
         ToggleOffKnob = Color3.fromRGB(0, 0, 0),
-        ToggleGlow = Color3.fromRGB(255, 130, 50),
-        TabBGInactive = Color3.fromRGB(60, 45, 35),
-        DropdownBG = Color3.fromRGB(50, 35, 25),
-        DropdownListBG = Color3.fromRGB(40, 30, 20),
-        DropdownOptionBG = Color3.fromRGB(55, 40, 30),
-        DropdownOptionActive = Color3.fromRGB(90, 50, 35),
-        TextColor = Color3.fromRGB(255, 220, 200),
-        TextColorSecondary = Color3.fromRGB(210, 180, 160),
-        GradientStart = Color3.fromRGB(255, 140, 60),
-        GradientEnd = Color3.fromRGB(150, 60, 20),
-        KeybindGlow = Color3.fromRGB(255, 160, 100),
-        StrokeDark = Color3.fromRGB(20, 10, 5),
-        StrokeAccent = Color3.fromRGB(180, 70, 30),
+        ToggleGlow = Color3.fromRGB(255, 50, 50),
+        TabBGInactive = Color3.fromRGB(60, 60, 60),
+        DropdownBG = Color3.fromRGB(50, 50, 50),
+        DropdownListBG = Color3.fromRGB(45, 45, 45),
+        DropdownOptionBG = Color3.fromRGB(55, 55, 55),
+        DropdownOptionActive = Color3.fromRGB(90, 30, 30),
+        TextColor = Color3.fromRGB(255, 255, 255),
+        TextColorSecondary = Color3.fromRGB(200, 200, 200),
+        GradientStart = Color3.fromRGB(180, 0, 0),
+        GradientEnd = Color3.fromRGB(90, 0, 0),
+        KeybindGlow = Color3.fromRGB(0, 150, 255),
+        StrokeDark = Color3.fromRGB(20, 20, 20),
+        StrokeAccent = Color3.fromRGB(120, 0, 0),
     },
 
     ['Blue Steel'] = {
@@ -153,27 +153,27 @@ local Themes = {
         StrokeAccent = Color3.fromRGB(160, 160, 160),
     },
 
-    ['Dark Red'] = {
-        MainBG = Color3.fromRGB(25, 25, 25),
-        HeaderBG = Color3.fromRGB(35, 35, 35),
-        Accent = Color3.fromRGB(255, 0, 0),
-        AccentDark = Color3.fromRGB(180, 0, 0),
-        ButtonBG = Color3.fromRGB(60, 60, 60),
-        ButtonHover = Color3.fromRGB(80, 80, 80),
+    ['Sunset Ember'] = {
+        MainBG = Color3.fromRGB(30, 20, 15),
+        HeaderBG = Color3.fromRGB(45, 25, 15),
+        Accent = Color3.fromRGB(255, 100, 0),
+        AccentDark = Color3.fromRGB(200, 60, 0),
+        ButtonBG = Color3.fromRGB(60, 40, 30),
+        ButtonHover = Color3.fromRGB(80, 50, 35),
         ToggleOffKnob = Color3.fromRGB(0, 0, 0),
-        ToggleGlow = Color3.fromRGB(255, 50, 50),
-        TabBGInactive = Color3.fromRGB(60, 60, 60),
-        DropdownBG = Color3.fromRGB(50, 50, 50),
-        DropdownListBG = Color3.fromRGB(45, 45, 45),
-        DropdownOptionBG = Color3.fromRGB(55, 55, 55),
-        DropdownOptionActive = Color3.fromRGB(90, 30, 30),
-        TextColor = Color3.fromRGB(255, 255, 255),
-        TextColorSecondary = Color3.fromRGB(200, 200, 200),
-        GradientStart = Color3.fromRGB(180, 0, 0),
-        GradientEnd = Color3.fromRGB(90, 0, 0),
-        KeybindGlow = Color3.fromRGB(0, 150, 255),
-        StrokeDark = Color3.fromRGB(20, 20, 20),
-        StrokeAccent = Color3.fromRGB(120, 0, 0),
+        ToggleGlow = Color3.fromRGB(255, 130, 50),
+        TabBGInactive = Color3.fromRGB(60, 45, 35),
+        DropdownBG = Color3.fromRGB(50, 35, 25),
+        DropdownListBG = Color3.fromRGB(40, 30, 20),
+        DropdownOptionBG = Color3.fromRGB(55, 40, 30),
+        DropdownOptionActive = Color3.fromRGB(90, 50, 35),
+        TextColor = Color3.fromRGB(255, 220, 200),
+        TextColorSecondary = Color3.fromRGB(210, 180, 160),
+        GradientStart = Color3.fromRGB(255, 140, 60),
+        GradientEnd = Color3.fromRGB(150, 60, 20),
+        KeybindGlow = Color3.fromRGB(255, 160, 100),
+        StrokeDark = Color3.fromRGB(20, 10, 5),
+        StrokeAccent = Color3.fromRGB(180, 70, 30),
     },
 }
 
@@ -188,8 +188,17 @@ local function applyTheme(themeName)
 end
 
 local ThemeNames = {}
-for name in pairs(Themes) do
-    table.insert(ThemeNames, name)
+
+for _, theme in ipairs({
+    'Dark Red',
+    'Blue Steel',
+    'Green Army',
+    'Purple Night',
+    'Gold Noir',
+    'Silver Tech',
+    'Sunset Ember'
+}) do
+    table.insert(ThemeNames, theme)
 end
 
 applyTheme(ThemeNames[1])
