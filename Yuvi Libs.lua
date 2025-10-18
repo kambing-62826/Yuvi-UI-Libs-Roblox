@@ -1911,7 +1911,7 @@ end
             UI._editing = { KeyName = keybindName, Label = keybindButton, Glow = glow }
             keybindButton.Text = "..."
             glow.Transparency = 0
-            UI:Notify("Keybind", "Press any key to set keybind for '" .. labelText .. "'", 2)
+            UI:Notify("Keybind", "Press any key to set keybind for '" .. name .. "'", 2)
         end)
 
         return {
@@ -1922,7 +1922,7 @@ end
                     UI._keybinds[keybindName] = key
                     keybindButton.Text = key.Name
                 else
-                    warn("Invalid KeyCode provided for keybind:", labelText)
+                    warn("Invalid KeyCode provided for keybind:", name)
                 end
             end
         }
