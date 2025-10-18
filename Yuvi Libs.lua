@@ -1853,91 +1853,87 @@ function TabAPI:createColorPicker(config)
 end
 
     -- createKeybind
-    function TabAPI:createKeybind(config)
-        local name = config.Name or "Keybind"
-        local defaultKey = config.Default or Enum.KeyCode.T
-        local callback = config.Callback or function() end
-        local column = config.Column or 1
-        
-        local parent = getParent(self, column)
-        local container = Instance.new("Frame")
-        container.Name = "KeybindContainer"
-        container.Size = UDim2.new(1, 0, 0, 40)
-        container.BackgroundTransparency = 1
-        container.Parent = parent
+function TabAPI:createKeybind(config)
+    local name = config.Name or "Keybind"
+    local defaultKey = config.Default or Enum.KeyCode.T
+    local callback = config.Callback or function() end
+    local column = config.Column or 1
 
-        local hLayout = Instance.new("UIListLayout", container)
-        hLayout.FillDirection = Enum.FillDirection.Horizontal
-        hLayout.Padding = UDim.new(0, 8)
-        hLayout.HorizontalAlignment = Enum.HorizontalAlignment.Left
-        hLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+    local parent = getParent(self, column)
+    local container = Instance.new("Frame")
+    container.Name = "KeybindContainer"
+    container.Size = UDim2.new(1, 0, 0, 40)
+    container.BackgroundTransparency = 1
+    container.Parent = parent
 
-        local label = Instance.new("TextLabel")
-        label.Size = UDim2.new(0, 150, 1, 0)
-        label.BackgroundTransparency = 1
-        label.Font = Enum.Font.GothamBold
-        label.TextSize = 14
-        label.TextColor3 = CurrentTheme.TextColor
-        label.Text = name
-        label.TextXAlignment = Enum.TextXAlignment.Left
-        label.Parent = container
+    local hLayout = Instance.new("UIListLayout", container)
+    hLayout.FillDirection = Enum.FillDirection.Horizontal
+    hLayout.Padding = UDim.new(0, 8)
+    hLayout.HorizontalAlignment = Enum.HorizontalAlignment.Left
+    hLayout.VerticalAlignment = Enum.VerticalAlignment.Center
 
-        local keybindButton = Instance.new("TextButton")
-        keybindButton.Name = "KeybindButton"
-        keybindButton.Size = UDim2.new(0, 80, 0, 25)
-        keybindButton.BackgroundColor3 = CurrentTheme.DropdownBG
-        keybindButton.Text = defaultKey.Name
-        keybindButton.Font = Enum.Font.GothamBold
-        keybindButton.TextSize = 14
-        keybindButton.TextColor3 = CurrentTheme.TextColorSecondary
-        keybindButton.AutoButtonColor = false
-        keybindButton.Parent = container
-        Instance.new("UICorner", keybindButton).CornerRadius = UDim.new(0, 6)
+    local label = Instance.new("TextLabel")
+    label.Size = UDim2.new(0, 150, 1, 0)
+    label.BackgroundTransparency = 1
+    label.Font = Enum.Font.GothamBold
+    label.TextSize = 14
+    label.TextColor3 = CurrentTheme.TextColor
+    label.Text = name
+    label.TextXAlignment = Enum.TextXAlignment.Left
+    label.Parent = container
 
-        local glow = Instance.new("UIStroke", keybindButton)
-        glow.Thickness = 2
-        glow.Color = CurrentTheme.KeybindGlow 
-        glow.Transparency = 1
+    local keybindButton = Instance.new("TextButton")
+    keybindButton.Name = "KeybindButton"
+    keybindButton.Size = UDim2.new(0, 80, 0, 25)
+    keybindButton.BackgroundColor3 = CurrentTheme.DropdownBG
+    keybindButton.Text = defaultKey.Name
+    keybindButton.Font = Enum.Font.GothamBold
+    keybindButton.TextSize = 14
+    keybindButton.TextColor3 = CurrentTheme.TextColorSecondary
+    keybindButton.AutoButtonColor = false
+    keybindButton.Parent = container
+    Instance.new("UICorner", keybindButton).CornerRadius = UDim.new(0, 6)
 
-        local keybindName = name:gsub(" ", "")
-        UI._keybinds[name] = defaultKey
-        if callback then UI._keybindCallbacks[name] = callback end
+    local glow = Instance.new("UIStroke", keybindButton)
+    glow.Thickness = 2
+    glow.Color = CurrentTheme.KeybindGlow 
+    glow.Transparency = 1
 
-        keybindButton.MouseButton1Click:Connect(function()
-            if UI._editing and UI._editing.KeyName ~= keybindName then 
-                 UI._editing.Glow.Transparency = 1 
-                 UI._editing.Label.Text = UI._keybinds[UI._editing.KeyName].Name
+    local keybindName = name:gsub(" ", "")
+    UI._keybinds[keybindName] = defaultKey
+    UI._keybindCallbacks[keybindName] = callback
+
+    keybindButton.MouseButton1Click:Connect(function()
+        if UI._editing and UI._editing.KeyName ~= keybindName then
+            UI._editing.Glow.Transparency = 1 
+            UI._editing.Label.Text = UI._keybinds[UI._editing.KeyName].Name
+        end
+
+        UI._editing = { KeyName = keybindName, Label = keybindButton, Glow = glow }
+        keybindButton.Text = "..."
+        glow.Transparency = 0
+        UI:Notify("Keybind", "Press any key to set keybind for '" .. name .. "'", 2)
+    end)
+
+    return {
+        Frame = container,
+        Get = function() return UI._keybinds[keybindName] end,
+        Set = function(key)
+            if typeof(key) == "EnumItem" and key.EnumType == Enum.KeyCode then
+                UI._keybinds[keybindName] = key
+                keybindButton.Text = key.Name
+            else
+                warn("Invalid KeyCode provided for keybind:", name)
             end
-            
-            UI._editing = { KeyName = keybindName, Label = keybindButton, Glow = glow }
-            keybindButton.Text = "..."
-            glow.Transparency = 0
-            UI:Notify("Keybind", "Press any key to set keybind for '" .. labelText .. "'", 2)
-        end)
-
-        return {
-            Frame = container,
-            Get = function() return UI._keybinds[keybindName] end,
-            Set = function(key)
-                if typeof(key) == "EnumItem" and key.EnumType == Enum.KeyCode then
-                    UI._keybinds[keybindName] = key
-                    keybindButton.Text = key.Name
-                else
-                    warn("Invalid KeyCode provided for keybind:", labelText)
-                end
-            end
-        }
-    end
-
-    function UI:Notify(title, text, duration)
-        notify(title, text, duration)
-    end
-
-    UI._tabs[name] = TabAPI
-    UI._tabFrames[name] = TabFrame
-    return TabAPI
+        end
+    }
 end
 
+function UI:Notify(title, text, duration)
+    notify(title, text, duration)
+end
+
+-- === GLOBAL INPUT DETECTOR ===
 UserInputService.InputBegan:Connect(function(input, gameProcessed)
     if UI._editing and input.UserInputType == Enum.UserInputType.Keyboard then
         local key = input.KeyCode
@@ -1951,16 +1947,30 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
     end
 
     if gameProcessed then return end
-    
+
     if input.UserInputType == Enum.UserInputType.Keyboard then
         for name, key in pairs(UI._keybinds) do
             if typeof(key) == "EnumItem" and input.KeyCode == key then
                 if UI._keybindCallbacks[name] then
-                    local ok,err = pcall(function() UI._keybindCallbacks[name]() end)
-                    if not ok then warn("Keybind callback error for '" .. name .. "':", err) end
+                    local ok, err = pcall(function()
+                        UI._keybindCallbacks[name]()
+                    end)
+                    if not ok then
+                        warn("Keybind callback error for '" .. name .. "':", err)
+                    end
                 end
 
-                if name == "OpenGUI" then
+                if name:lower() == "opengui" or name:lower() == "openui" then
+                    local gui = game.Players.LocalPlayer:WaitForChild("PlayerGui"):FindFirstChild("YuviHub")
+                    if gui then
+                        local frame = gui:FindFirstChild("MainFrame", true)
+                        if frame then
+                            frame.Visible = not frame.Visible
+                            local popup = gui:FindFirstChild("PopupBtn", true)
+                            if popup then popup.Visible = not frame.Visible end
+                            UI:Notify("Yuvi UI", frame.Visible and "Opened" or "Closed", 1.2)
+                        end
+                    end
                 end
             end
         end
@@ -2035,13 +2045,5 @@ end
 
 UI.Themes = Themes
 UI.CurrentTheme = CurrentTheme
-
-function UI:ToggleGUI()
-	local E = self._Elements
-	if not E.MainFrame or not E.PopupBtn then return end
-	local minimized = not E.MainFrame.Visible
-	E.MainFrame.Visible = not minimized
-	E.PopupBtn.Visible = minimized
-end
 
 return UI
