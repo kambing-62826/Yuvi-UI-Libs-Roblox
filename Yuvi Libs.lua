@@ -1015,81 +1015,58 @@ function TabAPI:createToggle(config)
 end
 
     -- createButton
-    function TabAPI:createButton(config)
-        local buttonText = config.Name or "Button"
-        local callback = config.Callback or function() end
-        local column = config.Column or 1
-        
-        local parent = getParent(self, column)
-        local button = Instance.new("TextButton")
-        button.Name = "Button"
-        button.Size = UDim2.new(0, 270, 0, 35)
-        button.BackgroundColor3 = CurrentTheme.ButtonBG
-        button.BackgroundTransparency = 0
-        button.BorderSizePixel = 0
-        button.Text = buttonText
-        button.Font = Enum.Font.GothamBold
-        button.TextSize = 14
-        button.TextColor3 = CurrentTheme.TextColor
-        button.AutoButtonColor = false
-        button.Parent = parent
+function TabAPI:createButton(config)
+    local buttonText = config.Name or "Button"
+    local callback = config.Callback or function() end
+    local column = config.Column or 1
+    
+    local parent = getParent(self, column)
+    local button = Instance.new("TextButton")
+    button.Name = "Button"
+    button.Size = UDim2.new(1, -10, 0, 35) -- responsive width
+    button.BackgroundColor3 = CurrentTheme.ButtonBG
+    button.BackgroundTransparency = 0
+    button.BorderSizePixel = 0
+    button.Text = buttonText
+    button.Font = Enum.Font.GothamBold
+    button.TextSize = 14
+    button.TextColor3 = CurrentTheme.TextColor
+    button.AutoButtonColor = false
+    button.Parent = parent
 
-        local corner = Instance.new("UICorner")
-        corner.CornerRadius = UDim.new(0, 8)
-        corner.Parent = button
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 8)
+    corner.Parent = button
 
-        local gradient = Instance.new("UIGradient")
-        gradient.Color = ColorSequence.new{ 
-            ColorSequenceKeypoint.new(0, CurrentTheme.ButtonHover), 
-            ColorSequenceKeypoint.new(0.5, CurrentTheme.ButtonBG), 
-            ColorSequenceKeypoint.new(1, CurrentTheme.MainBG) 
-        }
-        gradient.Rotation = 90
-        gradient.Parent = button
+    local gradient = Instance.new("UIGradient")
+    gradient.Color = ColorSequence.new{ 
+        ColorSequenceKeypoint.new(0, CurrentTheme.ButtonHover), 
+        ColorSequenceKeypoint.new(0.5, CurrentTheme.ButtonBG), 
+        ColorSequenceKeypoint.new(1, CurrentTheme.MainBG) 
+    }
+    gradient.Rotation = 90
+    gradient.Parent = button
 
-        local scale = Instance.new("UIScale")
-        scale.Scale = 1
-        scale.Parent = button
+    local scale = Instance.new("UIScale", button)
+    scale.Scale = 1
 
-        local function animateButton(targetScale, targetColor)
-            TweenService:Create(
-                scale, 
-                TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), 
-                {Scale = targetScale}
-            ):Play()
-            TweenService:Create(
-                button, 
-                TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), 
-                {BackgroundColor3 = targetColor}
-            ):Play()
-        end
+    button.MouseEnter:Connect(function()
+        TweenService:Create(button, TweenInfo.new(0.15), {BackgroundColor3 = CurrentTheme.ButtonHover}):Play()
+    end)
+    button.MouseLeave:Connect(function()
+        TweenService:Create(button, TweenInfo.new(0.15), {BackgroundColor3 = CurrentTheme.ButtonBG}):Play()
+    end)
 
-        button.MouseEnter:Connect(function()
-            TweenService:Create(button, TweenInfo.new(0.15), {BackgroundColor3 = CurrentTheme.ButtonHover}):Play()
-        end)
-        button.MouseLeave:Connect(function()
-            TweenService:Create(button, TweenInfo.new(0.15), {BackgroundColor3 = CurrentTheme.ButtonBG}):Play()
-        end)
+    button.MouseButton1Click:Connect(function()
+        local shrink = TweenService:Create(scale, TweenInfo.new(0.08), {Scale = 0.92})
+        local restore = TweenService:Create(scale, TweenInfo.new(0.1), {Scale = 1.05})
+        shrink:Play()
+        shrink.Completed:Connect(function() restore:Play() end)
+        if callback then task.spawn(callback) end
+    end)
 
-        button.MouseButton1Click:Connect(function()
-            local shrink = TweenService:Create( 
-                scale, 
-                TweenInfo.new(0.08, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), 
-                {Scale = 0.92} 
-            )
-            local restore = TweenService:Create( 
-                scale, 
-                TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), 
-                {Scale = 1.05} 
-            )
-            shrink:Play()
-            shrink.Completed:Connect(function() restore:Play() end)
-
-            if callback then task.spawn(callback) end
-        end)
-
-        return button
-    end
+    return button
+end
 
     -- createSlider
     function TabAPI:createSlider(config)
@@ -2095,6 +2072,5 @@ end
 return UI
 
 
-
-
+ 
 
