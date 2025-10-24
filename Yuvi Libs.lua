@@ -1104,7 +1104,7 @@ end
         local valueLabel = Instance.new("TextLabel")
         valueLabel.Name = "ValueLabel"
         valueLabel.Size = UDim2.new(0.3, 0, 1, 0)
-        valueLabel.Position = UDim2.new(0.7, 0, 0, 0)
+        valueLabel.Position = UDim2.new(0.5, 0, 0, 0)
         valueLabel.BackgroundTransparency = 1
         valueLabel.Font = Enum.Font.GothamBold
         valueLabel.TextSize = 14
