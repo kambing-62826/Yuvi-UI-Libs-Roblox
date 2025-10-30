@@ -148,12 +148,12 @@ MainTab:createSlider({
 - Simple Dropdown example:
 ```lua
 MainTab:createDropdown({
-    Name = "Example Dropdown",
-    Options = {"Option 1", "Option 2", "Option 3"},
-    CurrentOption = "Option 1",
+    Name = "Example",
+    Options = {"Options1", "Options2", "Options3"},
+    MultiSelect = true, -- aktifkan multi select
     Column = 1,
-    Callback = function(selectedOption)
-        print("Selected option:", selectedOption)
+    Callback = function(selectedList)
+        print("Selected:", table.concat(selectedList, ", "))
     end
 })
 ```
@@ -170,6 +170,7 @@ end
 MainTab:createDropdown({
     Name = "Select Theme",
     Options = ThemeNames,
+    MultiSelect = false,
     CurrentOption = "Dark Red",
     Column = 1,
     Callback = function(selectedThemeName)
