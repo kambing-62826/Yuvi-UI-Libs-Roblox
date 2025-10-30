@@ -1201,9 +1201,9 @@ function TabAPI:createDropdown(config)
     local options = config.Options or {}
     local default = config.CurrentOption or options[1]
     local callback = config.Callback or function() end
-    local column = config.Column or 1 
-    local multi = config.MultiSelect or false
-    
+    local column = config.Column or 1
+    local multiSelect = config.MultiSelect or false
+
     local TweenService = game:GetService("TweenService")
     local UserInputService = game:GetService("UserInputService")
 
@@ -1240,7 +1240,7 @@ function TabAPI:createDropdown(config)
     dropdownBtn.Size = UDim2.new(0.99, -10, 0, 35)
     dropdownBtn.Position = UDim2.new(0, 5, 0, 0)
     dropdownBtn.BackgroundColor3 = CurrentTheme.DropdownBG
-    dropdownBtn.Text = default or "Select"
+    dropdownBtn.Text = "Select"
     dropdownBtn.Font = Enum.Font.GothamBold
     dropdownBtn.TextSize = 14
     dropdownBtn.TextColor3 = CurrentTheme.TextColorSecondary
@@ -1307,40 +1307,55 @@ function TabAPI:createDropdown(config)
     local FRAME_HEIGHT_COLLAPSED = 70
     local FRAME_HEIGHT_EXPANDED = FRAME_HEIGHT_COLLAPSED + LIST_FRAME_OPEN_HEIGHT
 
-local function updateOptionVisuals(optBtn)
-    local optText = optBtn.Text
-    local isSelected = table.find(selected, optText)
-    optBtn.BackgroundColor3 = isSelected and CurrentTheme.DropdownOptionActive or CurrentTheme.DropdownOptionBG
-    optBtn.TextColor3 = isSelected and CurrentTheme.TextColor or CurrentTheme.TextColorSecondary
-    local check = optBtn:FindFirstChild("CheckMark")
-    if check then
-        check.Text = isSelected and "✔" or ""
-        check.TextColor3 = CurrentTheme.ToggleGlow
-    end
-end
+    local selected = {}
 
-local function toggleList(show)
-    if show then
-        listFrame.Visible = true
-        container.ClipsDescendants = true
-        TweenService:Create(container, TweenInfo.new(0.25, Enum.EasingStyle.Quad), {
-            Size = UDim2.new(1, 0, 0, FRAME_HEIGHT_EXPANDED)
-        }):Play()
-        TweenService:Create(listFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quad), {
-            Size = UDim2.new(0, LIST_FRAME_WIDTH, 0, LIST_FRAME_OPEN_HEIGHT)
-        }):Play()
+    if multiSelect then
+        if typeof(default) == "table" then
+            selected = default
+        elseif typeof(default) == "string" then
+            selected = { default }
+        end
     else
-        TweenService:Create(container, TweenInfo.new(0.25, Enum.EasingStyle.Quad), {
-            Size = UDim2.new(1, 0, 0, FRAME_HEIGHT_COLLAPSED)
-        }):Play()
-        TweenService:Create(listFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quad), {
-            Size = UDim2.new(0, LIST_FRAME_WIDTH, 0, 0)
-        }):Play()
-        task.delay(0.25, function()
-            listFrame.Visible = false
-        end)
+        selected = { default or options[1] or "" }
     end
-end
+
+    container:SetAttribute("SelectedOption", table.concat(selected, ", "))
+    dropdownBtn.Text = table.concat(selected, ", ")
+
+    local function updateOptionVisuals(optBtn)
+        local optText = optBtn.Text
+        local isSelected = table.find(selected, optText)
+        optBtn.BackgroundColor3 = isSelected and CurrentTheme.DropdownOptionActive or CurrentTheme.DropdownOptionBG
+        optBtn.TextColor3 = isSelected and CurrentTheme.TextColor or CurrentTheme.TextColorSecondary
+        local check = optBtn:FindFirstChild("CheckMark")
+        if check then
+            check.Text = isSelected and "✔" or ""
+            check.TextColor3 = CurrentTheme.ToggleGlow
+        end
+    end
+
+    local function toggleList(show)
+        if show then
+            listFrame.Visible = true
+            container.ClipsDescendants = true
+            TweenService:Create(container, TweenInfo.new(0.25, Enum.EasingStyle.Quad), {
+                Size = UDim2.new(1, 0, 0, FRAME_HEIGHT_EXPANDED)
+            }):Play()
+            TweenService:Create(listFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quad), {
+                Size = UDim2.new(0, LIST_FRAME_WIDTH, 0, LIST_FRAME_OPEN_HEIGHT)
+            }):Play()
+        else
+            TweenService:Create(container, TweenInfo.new(0.25, Enum.EasingStyle.Quad), {
+                Size = UDim2.new(1, 0, 0, FRAME_HEIGHT_COLLAPSED)
+            }):Play()
+            TweenService:Create(listFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quad), {
+                Size = UDim2.new(0, LIST_FRAME_WIDTH, 0, 0)
+            }):Play()
+            task.delay(0.25, function()
+                listFrame.Visible = false
+            end)
+        end
+    end
 
     dropdownBtn.MouseButton1Click:Connect(function()
         listOpen = not listOpen
@@ -1348,26 +1363,10 @@ end
         glowBtn.Transparency = listOpen and 0 or 1
     end)
 
-local multiSelect = config.MultiSelect or false
-local selected = {}
-
-if multiSelect then
-    if typeof(default) == "table" then
-        selected = default
-    elseif typeof(default) == "string" then
-        selected = { default }
-    end
-else
-    selected = { default or options[1] or "" }
-end
-
-container:SetAttribute("SelectedOption", table.concat(selected, ", "))
-dropdownBtn.Text = table.concat(selected, ", ")
-
     for _, opt in ipairs(options) do
         local optBtn = Instance.new("TextButton")
         optBtn.Size = UDim2.new(1, 0, 0, 30)
-        optBtn.BackgroundColor3 = CurrentTheme.DropdownOptionBG 
+        optBtn.BackgroundColor3 = CurrentTheme.DropdownOptionBG
         optBtn.Font = Enum.Font.GothamBold
         optBtn.TextSize = 14
         optBtn.Text = opt
@@ -1402,36 +1401,36 @@ dropdownBtn.Text = table.concat(selected, ", ")
             updateOptionVisuals(optBtn)
         end)
 
-optBtn.MouseButton1Click:Connect(function()
-    local optText = opt
+        optBtn.MouseButton1Click:Connect(function()
+            local optText = opt
 
-    if multiSelect then
-        if table.find(selected, optText) then
-            table.remove(selected, table.find(selected, optText))
-        else
-            table.insert(selected, optText)
-        end
-        dropdownBtn.Text = #selected > 0 and table.concat(selected, ", ") or "Select"
-        for _, v in pairs(scroll:GetChildren()) do
-            if v:IsA("TextButton") then
-                updateOptionVisuals(v)
+            if multiSelect then
+                if table.find(selected, optText) then
+                    table.remove(selected, table.find(selected, optText))
+                else
+                    table.insert(selected, optText)
+                end
+                dropdownBtn.Text = #selected > 0 and table.concat(selected, ", ") or "Select"
+                for _, v in pairs(scroll:GetChildren()) do
+                    if v:IsA("TextButton") then
+                        updateOptionVisuals(v)
+                    end
+                end
+                if callback then pcall(callback, selected) end
+            else
+                selected = { optText }
+                dropdownBtn.Text = optText
+                for _, v in pairs(scroll:GetChildren()) do
+                    if v:IsA("TextButton") then
+                        updateOptionVisuals(v)
+                    end
+                end
+                toggleList(false)
+                listOpen = false
+                glowBtn.Transparency = 1
+                if callback then pcall(callback, optText) end
             end
-        end
-        if callback then pcall(callback, selected) end
-    else
-        selected = { optText }
-        dropdownBtn.Text = optText
-        for _, v in pairs(scroll:GetChildren()) do
-            if v:IsA("TextButton") then
-                updateOptionVisuals(v)
-            end
-        end
-        toggleList(false)
-        listOpen = false
-        glowBtn.Transparency = 1
-        if callback then pcall(callback, optText) end
-    end
-end)
+        end)
     end
 
     UserInputService.InputBegan:Connect(function(input)
@@ -1457,35 +1456,36 @@ end)
         end
     end)
 
-return {
-    Frame = container,
-    Get = function()
-        if multiSelect then
-            return selected
-        else
-            return selected[1]
-        end
-    end,
-    Set = function(value)
-        if multiSelect then
-            if typeof(value) == "table" then
-                selected = value
-            elseif typeof(value) == "string" then
+    return {
+        Frame = container,
+        Get = function()
+            if multiSelect then
+                return selected
+            else
+                return selected[1]
+            end
+        end,
+        Set = function(value)
+            if multiSelect then
+                if typeof(value) == "table" then
+                    selected = value
+                elseif typeof(value) == "string" then
+                    selected = { value }
+                end
+                dropdownBtn.Text = table.concat(selected, ", ")
+            else
                 selected = { value }
+                dropdownBtn.Text = value or "Select"
             end
-            dropdownBtn.Text = table.concat(selected, ", ")
-        else
-            selected = { value }
-            dropdownBtn.Text = value or "Select"
-        end
-        for _, v in pairs(scroll:GetChildren()) do
-            if v:IsA("TextButton") then
-                updateOptionVisuals(v)
+            for _, v in pairs(scroll:GetChildren()) do
+                if v:IsA("TextButton") then
+                    updateOptionVisuals(v)
+                end
             end
+            if callback then pcall(callback, multiSelect and selected or selected[1]) end
         end
-        if callback then pcall(callback, multiSelect and selected or selected[1]) end
-    end
-}
+    }
+end
 
 -- createTextbox
 function TabAPI:createTextbox(config)
@@ -2123,3 +2123,7 @@ function UI:ToggleUI()
 end
 
 return UI
+
+
+ 
+
