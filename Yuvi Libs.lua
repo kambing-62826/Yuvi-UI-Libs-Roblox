@@ -1202,6 +1202,7 @@ function TabAPI:createDropdown(config)
     local default = config.CurrentOption or options[1]
     local callback = config.Callback or function() end
     local column = config.Column or 1 
+    local multi = config.MultiSelect or false
     
     local TweenService = game:GetService("TweenService")
     local UserInputService = game:GetService("UserInputService")
@@ -1306,17 +1307,17 @@ function TabAPI:createDropdown(config)
     local FRAME_HEIGHT_COLLAPSED = 70
     local FRAME_HEIGHT_EXPANDED = FRAME_HEIGHT_COLLAPSED + LIST_FRAME_OPEN_HEIGHT
 
-    local function updateOptionVisuals(optBtn)
-        local optText = optBtn.Text
-        local isSelected = container:GetAttribute("SelectedOption") == optText
-        optBtn.BackgroundColor3 = isSelected and CurrentTheme.DropdownOptionActive or CurrentTheme.DropdownOptionBG
-        optBtn.TextColor3 = isSelected and CurrentTheme.TextColor or CurrentTheme.TextColorSecondary
-        local check = optBtn:FindFirstChild("CheckMark")
-        if check then
-            check.Text = isSelected and "✔" or ""
-            check.TextColor3 = CurrentTheme.ToggleGlow
-        end
+local function updateOptionVisuals(optBtn)
+    local optText = optBtn.Text
+    local isSelected = table.find(selected, optText)
+    optBtn.BackgroundColor3 = isSelected and CurrentTheme.DropdownOptionActive or CurrentTheme.DropdownOptionBG
+    optBtn.TextColor3 = isSelected and CurrentTheme.TextColor or CurrentTheme.TextColorSecondary
+    local check = optBtn:FindFirstChild("CheckMark")
+    if check then
+        check.Text = isSelected and "✔" or ""
+        check.TextColor3 = CurrentTheme.ToggleGlow
     end
+end
 
 local function toggleList(show)
     if show then
@@ -1347,9 +1348,21 @@ end
         glowBtn.Transparency = listOpen and 0 or 1
     end)
 
-    local selected = default or options[1] or ""
-    container:SetAttribute("SelectedOption", selected)
-    dropdownBtn.Text = selected
+local multiSelect = config.MultiSelect or false
+local selected = {}
+
+if multiSelect then
+    if typeof(default) == "table" then
+        selected = default
+    elseif typeof(default) == "string" then
+        selected = { default }
+    end
+else
+    selected = { default or options[1] or "" }
+end
+
+container:SetAttribute("SelectedOption", table.concat(selected, ", "))
+dropdownBtn.Text = table.concat(selected, ", ")
 
     for _, opt in ipairs(options) do
         local optBtn = Instance.new("TextButton")
@@ -1389,19 +1402,36 @@ end
             updateOptionVisuals(optBtn)
         end)
 
-        optBtn.MouseButton1Click:Connect(function()
-            container:SetAttribute("SelectedOption", opt)
-            dropdownBtn.Text = opt
-            for _,v in pairs(scroll:GetChildren()) do
-                if v:IsA("TextButton") then
-                    updateOptionVisuals(v)
-                end
+optBtn.MouseButton1Click:Connect(function()
+    local optText = opt
+
+    if multiSelect then
+        if table.find(selected, optText) then
+            table.remove(selected, table.find(selected, optText))
+        else
+            table.insert(selected, optText)
+        end
+        dropdownBtn.Text = #selected > 0 and table.concat(selected, ", ") or "Select"
+        for _, v in pairs(scroll:GetChildren()) do
+            if v:IsA("TextButton") then
+                updateOptionVisuals(v)
             end
-            toggleList(false)
-            listOpen = false
-            glowBtn.Transparency = 1
-            if callback then pcall(callback, opt) end
-        end)
+        end
+        if callback then pcall(callback, selected) end
+    else
+        selected = { optText }
+        dropdownBtn.Text = optText
+        for _, v in pairs(scroll:GetChildren()) do
+            if v:IsA("TextButton") then
+                updateOptionVisuals(v)
+            end
+        end
+        toggleList(false)
+        listOpen = false
+        glowBtn.Transparency = 1
+        if callback then pcall(callback, optText) end
+    end
+end)
     end
 
     UserInputService.InputBegan:Connect(function(input)
@@ -1427,23 +1457,35 @@ end
         end
     end)
 
-    return {
-        Frame = container,
-        Get = function()
-            return container:GetAttribute("SelectedOption")
-        end,
-        Set = function(value)
-            container:SetAttribute("SelectedOption", value)
-            dropdownBtn.Text = value or "Select"
-            for _,v in pairs(scroll:GetChildren()) do
-                if v:IsA("TextButton") then
-                    updateOptionVisuals(v)
-                end
-            end
-            if callback then pcall(callback, value) end
+return {
+    Frame = container,
+    Get = function()
+        if multiSelect then
+            return selected
+        else
+            return selected[1]
         end
-    }
-end
+    end,
+    Set = function(value)
+        if multiSelect then
+            if typeof(value) == "table" then
+                selected = value
+            elseif typeof(value) == "string" then
+                selected = { value }
+            end
+            dropdownBtn.Text = table.concat(selected, ", ")
+        else
+            selected = { value }
+            dropdownBtn.Text = value or "Select"
+        end
+        for _, v in pairs(scroll:GetChildren()) do
+            if v:IsA("TextButton") then
+                updateOptionVisuals(v)
+            end
+        end
+        if callback then pcall(callback, multiSelect and selected or selected[1]) end
+    end
+}
 
 -- createTextbox
 function TabAPI:createTextbox(config)
@@ -2081,7 +2123,3 @@ function UI:ToggleUI()
 end
 
 return UI
-
-
- 
-
