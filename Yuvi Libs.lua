@@ -1208,6 +1208,12 @@ function TabAPI:createDropdown(config)
     local UserInputService = game:GetService("UserInputService")
 
     local parent = getParent(self, column)
+    
+    parent:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
+        container.Size = UDim2.new(1, 0, 0, container.Size.Y.Offset)
+        dropdownBtn.Size = UDim2.new(0.99, -10, 0, dropdownBtn.Size.Y.Offset)
+        listFrame.Size = UDim2.new(0, parent.AbsoluteSize.X - 20, 0, listFrame.Size.Y.Offset)
+    end)
 
     local container = Instance.new("Frame")
     container.Name = "DropdownContainer"
@@ -1303,7 +1309,7 @@ function TabAPI:createDropdown(config)
     end)
 
     local listOpen = false
-    local LIST_FRAME_OPEN_HEIGHT = 160
+    local LIST_FRAME_OPEN_HEIGHT = math.clamp(#options * 32, 100, 300)
     local FRAME_HEIGHT_COLLAPSED = 70
     local FRAME_HEIGHT_EXPANDED = FRAME_HEIGHT_COLLAPSED + LIST_FRAME_OPEN_HEIGHT
 
@@ -2123,7 +2129,3 @@ function UI:ToggleUI()
 end
 
 return UI
-
-
- 
-
