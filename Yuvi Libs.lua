@@ -1263,11 +1263,11 @@ function TabAPI:createDropdown(config)
     glowBtn.Transparency = 1
     glowBtn.Parent = dropdownBtn
 
-    local LIST_FRAME_WIDTH = 265
     local listFrame = Instance.new("Frame")
     listFrame.Name = "ListFrame"
-    listFrame.Size = UDim2.new(0, LIST_FRAME_WIDTH, 0, 0)
-    listFrame.Position = UDim2.new(0, 0, 1, 5)
+    listFrame.Size = UDim2.new(1, -10, 0, 0)
+    listFrame.Position = UDim2.new(0, 5, 1, 5)
+
     listFrame.BackgroundColor3 = CurrentTheme.DropdownListBG
     listFrame.BorderSizePixel = 0
     listFrame.ClipsDescendants = true
@@ -1342,14 +1342,14 @@ function TabAPI:createDropdown(config)
                 Size = UDim2.new(1, 0, 0, FRAME_HEIGHT_EXPANDED)
             }):Play()
             TweenService:Create(listFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quad), {
-                Size = UDim2.new(0, LIST_FRAME_WIDTH, 0, LIST_FRAME_OPEN_HEIGHT)
+                Size = UDim2.new(1, -10, 0, LIST_FRAME_OPEN_HEIGHT)
             }):Play()
         else
             TweenService:Create(container, TweenInfo.new(0.25, Enum.EasingStyle.Quad), {
                 Size = UDim2.new(1, 0, 0, FRAME_HEIGHT_COLLAPSED)
             }):Play()
             TweenService:Create(listFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quad), {
-                Size = UDim2.new(0, LIST_FRAME_WIDTH, 0, 0)
+                Size = UDim2.new(1, -10, 0, 0)
             }):Play()
             task.delay(0.25, function()
                 listFrame.Visible = false
@@ -1464,7 +1464,8 @@ function TabAPI:createDropdown(config)
 
         container.Size = UDim2.new(1, 0, 0, container.Size.Y.Offset)
         dropdownBtn.Size = UDim2.new(0.99, -10, 0, dropdownBtn.Size.Y.Offset)
-        listFrame.Size = UDim2.new(0, parentWidth - 20, 0, listFrame.Size.Y.Offset)
+        listFrame.Size = UDim2.new(1, -10, 0, listFrame.Size.Y.Offset)
+        listFrame.Position = UDim2.new(0, 5, 1, 5)
         scroll.Size = UDim2.new(1, -6, 1, -6)
 
         for _, child in ipairs(scroll:GetChildren()) do
