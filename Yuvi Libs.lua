@@ -1374,6 +1374,9 @@ function TabAPI:createDropdown(config)
         optBtn.ZIndex = 12
         optBtn.Parent = scroll
         optBtn.Name = "DropdownOption"
+        optBtn.TextScaled = false
+        optBtn.TextWrapped = true
+        optBtn.TextXAlignment = Enum.TextXAlignment.Left
 
         Instance.new("UICorner", optBtn).CornerRadius = UDim.new(0, 4)
 
@@ -1456,11 +1459,23 @@ function TabAPI:createDropdown(config)
         end
     end)
     
-parent:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
-    container.Size = UDim2.new(1, 0, 0, container.Size.Y.Offset)
-    dropdownBtn.Size = UDim2.new(0.99, -10, 0, dropdownBtn.Size.Y.Offset)
-    listFrame.Size = UDim2.new(0, parent.AbsoluteSize.X - 20, 0, listFrame.Size.Y.Offset)
-end)
+    parent:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
+        local parentWidth = parent.AbsoluteSize.X
+
+        container.Size = UDim2.new(1, 0, 0, container.Size.Y.Offset)
+        dropdownBtn.Size = UDim2.new(0.99, -10, 0, dropdownBtn.Size.Y.Offset)
+        listFrame.Size = UDim2.new(0, parentWidth - 20, 0, listFrame.Size.Y.Offset)
+        scroll.Size = UDim2.new(1, -6, 1, -6)
+
+        for _, child in ipairs(scroll:GetChildren()) do
+            if child:IsA("TextButton") then
+                child.Size = UDim2.new(1, 0, 0, 30)
+                child.TextScaled = false
+                child.TextWrapped = true
+                child.TextXAlignment = Enum.TextXAlignment.Left
+            end
+        end
+    end)
 
     return {
         Frame = container,
