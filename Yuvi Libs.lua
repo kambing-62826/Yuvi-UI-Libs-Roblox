@@ -1202,9 +1202,7 @@ function TabAPI:createDropdown(config)
     local default = config.CurrentOption or options[1]
     local callback = config.Callback or function() end
     local column = config.Column or 1 
-    
-    local TweenService = game:GetService("TweenService")
-    local UserInputService = game:GetService("UserInputService")
+    local multi = config.MultiSelect or false 
 
     local parent = getParent(self, column)
 
@@ -1215,14 +1213,6 @@ function TabAPI:createDropdown(config)
     container.Parent = parent
     container.ClipsDescendants = false
 
-    local vLayout = Instance.new("UIListLayout")
-    vLayout.FillDirection = Enum.FillDirection.Vertical
-    vLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    vLayout.HorizontalAlignment = Enum.HorizontalAlignment.Left
-    vLayout.VerticalAlignment = Enum.VerticalAlignment.Top
-    vLayout.Padding = UDim.new(0, 5)
-    vLayout.Parent = container
-
     local label = Instance.new("TextLabel")
     label.Size = UDim2.new(1, 0, 0, 20)
     label.BackgroundTransparency = 1
@@ -1231,205 +1221,112 @@ function TabAPI:createDropdown(config)
     label.TextColor3 = CurrentTheme.TextColorSecondary
     label.TextXAlignment = Enum.TextXAlignment.Left
     label.Text = labelText
-    label.LayoutOrder = 1
     label.Parent = container
 
     local dropdownBtn = Instance.new("TextButton")
     dropdownBtn.Name = "DropdownButton"
-    dropdownBtn.Size = UDim2.new(0.99, -10, 0, 35)
-    dropdownBtn.Position = UDim2.new(0, 5, 0, 0)
+    dropdownBtn.Size = UDim2.new(1, -10, 0, 35)
+    dropdownBtn.Position = UDim2.new(0, 5, 0, 25)
     dropdownBtn.BackgroundColor3 = CurrentTheme.DropdownBG
-    dropdownBtn.Text = default or "Select"
+    dropdownBtn.Text = multi and "Select Multiple" or (default or "Select")
     dropdownBtn.Font = Enum.Font.GothamBold
     dropdownBtn.TextSize = 14
     dropdownBtn.TextColor3 = CurrentTheme.TextColorSecondary
-    dropdownBtn.AutoButtonColor = false
-    dropdownBtn.LayoutOrder = 2
     dropdownBtn.Parent = container
 
     Instance.new("UICorner", dropdownBtn).CornerRadius = UDim.new(0, 6)
 
-    local strokeBtn = Instance.new("UIStroke")
-    strokeBtn.Name = "Stroke"
-    strokeBtn.Thickness = 1
-    strokeBtn.Color = CurrentTheme.StrokeAccent
-    strokeBtn.Parent = dropdownBtn
-
-    local glowBtn = Instance.new("UIStroke")
-    glowBtn.Name = "Glow"
-    glowBtn.Thickness = 2
-    glowBtn.Color = CurrentTheme.AccentDark
-    glowBtn.Transparency = 1
-    glowBtn.Parent = dropdownBtn
-
-    local LIST_FRAME_WIDTH = 265
     local listFrame = Instance.new("Frame")
-    listFrame.Name = "ListFrame"
-    listFrame.Size = UDim2.new(0, LIST_FRAME_WIDTH, 0, 0)
+    listFrame.Size = UDim2.new(1, 0, 0, 0)
     listFrame.Position = UDim2.new(0, 0, 1, 5)
     listFrame.BackgroundColor3 = CurrentTheme.DropdownListBG
-    listFrame.BorderSizePixel = 0
-    listFrame.ClipsDescendants = true
     listFrame.Visible = false
-    listFrame.ZIndex = 10
     listFrame.Parent = dropdownBtn
     Instance.new("UICorner", listFrame).CornerRadius = UDim.new(0, 6)
 
-    local listStroke = Instance.new("UIStroke")
-    listStroke.Name = "ListStroke"
-    listStroke.Thickness = 1.5
-    listStroke.Color = CurrentTheme.StrokeAccent
-    listStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-    listStroke.Parent = listFrame
-
     local scroll = Instance.new("ScrollingFrame")
-    scroll.Name = "Scroll"
     scroll.Size = UDim2.new(1, -6, 1, -6)
     scroll.Position = UDim2.new(0, 3, 0, 3)
+    scroll.BackgroundTransparency = 1
     scroll.CanvasSize = UDim2.new(0, 0, 0, 0)
     scroll.ScrollBarThickness = 4
-    scroll.BackgroundTransparency = 1
-    scroll.ZIndex = 11
     scroll.Parent = listFrame
 
-    local listLayout = Instance.new("UIListLayout")
-    listLayout.Padding = UDim.new(0, 2)
-    listLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    listLayout.Parent = scroll
+    local layout = Instance.new("UIListLayout", scroll)
+    layout.Padding = UDim.new(0, 2)
+    layout.SortOrder = Enum.SortOrder.LayoutOrder
 
-    listLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-        scroll.CanvasSize = UDim2.new(0, 0, 0, listLayout.AbsoluteContentSize.Y)
+    local selectedOptions = {}
+    local listOpen = false
+
+    game:GetService("RunService").RenderStepped:Connect(function()
+        listFrame.Size = UDim2.new(1, 0, listOpen and 0, listOpen and 160 or 0)
     end)
 
-    local listOpen = false
-    local LIST_FRAME_OPEN_HEIGHT = 160
-
-    local function updateOptionVisuals(optBtn)
-        local optText = optBtn.Text
-        local isSelected = container:GetAttribute("SelectedOption") == optText
-        optBtn.BackgroundColor3 = isSelected and CurrentTheme.DropdownOptionActive or CurrentTheme.DropdownOptionBG
-        optBtn.TextColor3 = isSelected and CurrentTheme.TextColor or CurrentTheme.TextColorSecondary
-        local check = optBtn:FindFirstChild("CheckMark")
-        if check then
-            check.Text = isSelected and "✔" or ""
-            check.TextColor3 = CurrentTheme.ToggleGlow
+    local function updateButtonText()
+        if multi then
+            if #selectedOptions == 0 then
+                dropdownBtn.Text = "Select Multiple"
+            else
+                dropdownBtn.Text = table.concat(selectedOptions, ", ")
+            end
         end
     end
 
     local function toggleList(show)
-        if show then
-            listFrame.Visible = true
-            TweenService:Create(listFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quad),
-                {Size = UDim2.new(0, LIST_FRAME_WIDTH, 0, LIST_FRAME_OPEN_HEIGHT)}):Play()
-        else
-            TweenService:Create(listFrame, TweenInfo.new(0.2, Enum.EasingStyle.Quad),
-                {Size = UDim2.new(0, LIST_FRAME_WIDTH, 0, 0)}):Play()
-            task.delay(0.2, function()
-                listFrame.Visible = false
-            end)
-        end
+        listOpen = show
+        listFrame.Visible = show
+        TweenService:Create(listFrame, TweenInfo.new(0.25),
+            {Size = show and UDim2.new(1, 0, 0, 160) or UDim2.new(1, 0, 0, 0)}):Play()
     end
 
     dropdownBtn.MouseButton1Click:Connect(function()
-        listOpen = not listOpen
-        toggleList(listOpen)
-        glowBtn.Transparency = listOpen and 0 or 1
+        toggleList(not listOpen)
     end)
-
-    local selected = default or options[1] or ""
-    container:SetAttribute("SelectedOption", selected)
-    dropdownBtn.Text = selected
 
     for _, opt in ipairs(options) do
         local optBtn = Instance.new("TextButton")
         optBtn.Size = UDim2.new(1, 0, 0, 30)
-        optBtn.BackgroundColor3 = CurrentTheme.DropdownOptionBG 
+        optBtn.BackgroundColor3 = CurrentTheme.DropdownOptionBG
         optBtn.Font = Enum.Font.GothamBold
         optBtn.TextSize = 14
+        optBtn.TextColor3 = CurrentTheme.TextColorSecondary
         optBtn.Text = opt
-        optBtn.AutoButtonColor = false
-        optBtn.ZIndex = 12
         optBtn.Parent = scroll
-        optBtn.Name = "DropdownOption"
-
-        Instance.new("UICorner", optBtn).CornerRadius = UDim.new(0, 4)
 
         local checkMark = Instance.new("TextLabel")
-        checkMark.Name = "CheckMark"
         checkMark.Size = UDim2.new(0, 20, 1, 0)
         checkMark.Position = UDim2.new(1, -25, 0, 0)
         checkMark.BackgroundTransparency = 1
-        checkMark.Font = Enum.Font.GothamBold
-        checkMark.TextSize = 16
-        checkMark.ZIndex = 13
         checkMark.Text = ""
         checkMark.Parent = optBtn
 
-        updateOptionVisuals(optBtn)
-
-        optBtn.MouseEnter:Connect(function()
-            TweenService:Create(optBtn, TweenInfo.new(0.1, Enum.EasingStyle.Quad), {
-                BackgroundColor3 = CurrentTheme.ButtonHover,
-                TextColor3 = CurrentTheme.TextColor
-            }):Play()
-        end)
-
-        optBtn.MouseLeave:Connect(function()
-            updateOptionVisuals(optBtn)
-        end)
-
         optBtn.MouseButton1Click:Connect(function()
-            container:SetAttribute("SelectedOption", opt)
-            dropdownBtn.Text = opt
-            for _,v in pairs(scroll:GetChildren()) do
-                if v:IsA("TextButton") then
-                    updateOptionVisuals(v)
+            if multi then
+                if table.find(selectedOptions, opt) then
+                    table.remove(selectedOptions, table.find(selectedOptions, opt))
+                    checkMark.Text = ""
+                else
+                    table.insert(selectedOptions, opt)
+                    checkMark.Text = "✔"
                 end
+                updateButtonText()
+                pcall(callback, selectedOptions)
+            else
+                selectedOptions = {opt}
+                dropdownBtn.Text = opt
+                toggleList(false)
+                pcall(callback, opt)
             end
-            toggleList(false)
-            listOpen = false
-            glowBtn.Transparency = 1
-            if callback then pcall(callback, opt) end
         end)
     end
 
-    UserInputService.InputBegan:Connect(function(input)
-        if listOpen and input.UserInputType == Enum.UserInputType.MouseButton1 then
-            local mouse = game.Players.LocalPlayer:GetMouse()
-            local inList = (
-                mouse.X >= listFrame.AbsolutePosition.X and
-                mouse.X <= listFrame.AbsolutePosition.X + listFrame.AbsoluteSize.X and
-                mouse.Y >= listFrame.AbsolutePosition.Y and
-                mouse.Y <= listFrame.AbsolutePosition.Y + listFrame.AbsoluteSize.Y
-            )
-            local inBtn = (
-                mouse.X >= dropdownBtn.AbsolutePosition.X and
-                mouse.X <= dropdownBtn.AbsolutePosition.X + dropdownBtn.AbsoluteSize.X and
-                mouse.Y >= dropdownBtn.AbsolutePosition.Y and
-                mouse.Y <= dropdownBtn.AbsolutePosition.Y + dropdownBtn.AbsoluteSize.Y
-            )
-            if not inList and not inBtn then
-                toggleList(false)
-                listOpen = false
-                glowBtn.Transparency = 1
-            end
-        end
-    end)
-
     return {
         Frame = container,
-        Get = function()
-            return container:GetAttribute("SelectedOption")
-        end,
-        Set = function(value)
-            container:SetAttribute("SelectedOption", value)
-            dropdownBtn.Text = value or "Select"
-            for _,v in pairs(scroll:GetChildren()) do
-                if v:IsA("TextButton") then
-                    updateOptionVisuals(v)
-                end
-            end
-            if callback then pcall(callback, value) end
+        Get = function() return selectedOptions end,
+        Set = function(values)
+            selectedOptions = values or {}
+            updateButtonText()
         end
     }
 end
