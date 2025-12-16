@@ -385,6 +385,14 @@ local function applyTheme(themeName)
         end
     end
     
+    --///////////////////--
+    if UI._Elements.TabButtonHolder then
+    UI._Elements.TabButtonHolder.BackgroundColor3 = theme.HeaderBG
+    if UI._Elements.TabButtonHolder:FindFirstChild("RightCover") then
+        UI._Elements.TabButtonHolder.RightCover.BackgroundColor3 = theme.HeaderBG
+    end
+end
+    
     -- Content Elements
     for _, tabFrame in pairs(UI._tabFrames) do
         local mainScroll = tabFrame:FindFirstChild("MainScroll")
@@ -748,6 +756,21 @@ TabButtonHolder.BackgroundColor3 = CurrentTheme.HeaderBG
 TabButtonHolder.BorderSizePixel = 0 -- Hilangkan outline agar mulus
 TabButtonHolder.Parent = MainFrame
 
+-- MEMBUAT SUDUT MELENGKUNG (OVAL)
+local TabCorner = Instance.new("UICorner")
+TabCorner.CornerRadius = UDim.new(0, 12) -- Angka 12 ini sesuaikan dengan kelengkungan MainFrame Anda
+TabCorner.Parent = TabButtonHolder
+
+-- Frame ini gunanya menutupi sisi kanan agar tetap lurus (tidak ikut oval)
+local RightCover = Instance.new("Frame")
+RightCover.Name = "RightCover"
+RightCover.Size = UDim2.new(0, 20, 1, 0)
+RightCover.Position = UDim2.new(1, -20, 0, 0) -- Menempel di pojok kanan sidebar
+RightCover.BackgroundColor3 = CurrentTheme.HeaderBG
+RightCover.BorderSizePixel = 0
+RightCover.ZIndex = 1 -- Agar berada di bawah teks tombol
+RightCover.Parent = TabButtonHolder
+
 local TabLayout = Instance.new("UIListLayout", TabButtonHolder)
 TabLayout.FillDirection = Enum.FillDirection.Vertical
 TabLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
@@ -808,6 +831,11 @@ function UI:createTab(name)
     TabFrame.BackgroundTransparency = 1
     TabFrame.Parent = ContentFrame
     TabFrame.Visible = false
+    
+    -- Tambahkan ini di dalam UI:createTab agar tombol rapi
+    local TabPadding = Instance.new("UIPadding", TabButtonHolder)
+    TabPadding.PaddingLeft = UDim.new(0, 10) -- Geser tombol 10px ke kanan
+    TabPadding.PaddingTop = UDim.new(0, 10)
 
     -- SATU SCROLL UTAMA
     local MainScroll = Instance.new("ScrollingFrame")
