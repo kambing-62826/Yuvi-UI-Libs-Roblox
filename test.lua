@@ -384,17 +384,6 @@ local function applyTheme(themeName)
             if strokeBtn then strokeBtn.Color = CurrentTheme.StrokeDark end
         end
     end
-    
-    --///////////////////--
-    if UI._Elements.TabButtonHolder then
-        local holder = UI._Elements.TabButtonHolder
-        holder.BackgroundColor3 = CurrentTheme.HeaderBG
-        
-        local rc = holder:FindFirstChild("RightCover")
-        if rc then
-            rc.BackgroundColor3 = CurrentTheme.HeaderBG
-        end
-    end
         
     -- Content Elements
     for _, tabFrame in pairs(UI._tabFrames) do
@@ -407,6 +396,17 @@ local function applyTheme(themeName)
                     if titleLabel then titleLabel.TextColor3 = CurrentTheme.TextColor end
                     local topStroke = child:FindFirstChild("topStroke")
                     if topStroke then topStroke.BackgroundColor3 = CurrentTheme.Accent end
+                end
+        
+                --///////////////////--
+                if UI._Elements.TabButtonHolder then
+                    local holder = UI._Elements.TabButtonHolder
+                    holder.BackgroundColor3 = CurrentTheme.HeaderBG
+                    
+                    local rc = holder:FindFirstChild("RightCover")
+                    if rc then
+                        rc.BackgroundColor3 = CurrentTheme.HeaderBG
+                    end
                 end
                 
                 -- Toggle
@@ -786,21 +786,21 @@ TabPadding.PaddingTop = UDim.new(0, 10)
 TabPadding.PaddingBottom = UDim.new(0, 10)
 
 -- === 2. CONTENT AREA & SEPARATOR ===
--- local Line = Instance.new("Frame")
--- Line.Name = "Separator"
--- Line.Size = UDim2.new(0, 1, 1, -35)
--- Line.Position = UDim2.new(0, 150, 0, 35) 
--- Line.BackgroundColor3 = CurrentTheme.Accent
--- Line.BorderSizePixel = 0
--- Line.ZIndex = 2
--- Line.Parent = MainFrame
+local Line = Instance.new("Frame")
+Line.Name = "Separator"
+Line.Size = UDim2.new(0, 1, 1, -35)
+Line.Position = UDim2.new(0, 150, 0, 35) 
+Line.BackgroundColor3 = CurrentTheme.Accent
+Line.BorderSizePixel = 0
+Line.ZIndex = 2
+Line.Parent = MainFrame
 
--- local ContentFrame = Instance.new("Frame")
--- ContentFrame.Name = "ContentFrame"
--- ContentFrame.Size = UDim2.new(1, -150, 1, -35) 
--- ContentFrame.Position = UDim2.new(0, 150, 0, 35) 
--- ContentFrame.BackgroundTransparency = 1
--- ContentFrame.Parent = MainFrame
+local ContentFrame = Instance.new("Frame")
+ContentFrame.Name = "ContentFrame"
+ContentFrame.Size = UDim2.new(1, -150, 1, -35) 
+ContentFrame.Position = UDim2.new(0, 150, 0, 35) 
+ContentFrame.BackgroundTransparency = 1
+ContentFrame.Parent = MainFrame
 
 function UI:createTab(name)
     if UI._tabs[name] then
