@@ -780,15 +780,16 @@ function UI:createTab(name)
     scale.Name = "ClickScale"
     scale.Scale = 1
 
-    -- === TAB FRAME ===
-    local TabFrame = Instance.new("Frame")
-    TabFrame.Name = "TabFrame_" .. name
-    TabFrame.Size = UDim2.new(1, -10, 1, -10)
-    TabFrame.Position = UDim2.new(0, 5, 0, 5)
-    TabFrame.BackgroundTransparency = 1
-    TabFrame.Parent = ContentFrame
-    TabFrame.Visible = false
-    
+-- === TAB FRAME ===
+local TabFrame = Instance.new("Frame")
+TabFrame.Name = "TabFrame_" .. name
+TabFrame.Size = UDim2.new(1, -10, 1, -10)
+TabFrame.Position = UDim2.new(0, 5, 0, 5)
+TabFrame.BackgroundTransparency = 1
+TabFrame.Parent = ContentFrame
+TabFrame.Visible = false
+
+    -- SATU SCROLL UTAMA
     local MainScroll = Instance.new("ScrollingFrame")
     MainScroll.Name = "MainScroll"
     MainScroll.Size = UDim2.new(1, 0, 1, 0)
@@ -809,27 +810,6 @@ function UI:createTab(name)
     MainPadding.PaddingRight = UDim.new(0, 5)
     MainPadding.PaddingTop = UDim.new(0, 5)
     MainPadding.PaddingBottom = UDim.new(0, 5)
-
-    local RightColumn = Instance.new("ScrollingFrame")
-    RightColumn.Name = "RightColumn"
-    RightColumn.Size = UDim2.new(0.5, -7, 1, 0)
-    RightColumn.Position = UDim2.new(0.5, 7, 0, 0)
-    RightColumn.AutomaticCanvasSize = Enum.AutomaticSize.Y
-    RightColumn.ScrollBarThickness = 6
-    RightColumn.ScrollingDirection = Enum.ScrollingDirection.Y
-    RightColumn.BackgroundTransparency = 1
-    RightColumn.Parent = TabFrame
-    
-    local RightLayout = Instance.new("UIListLayout", RightColumn)
-    RightLayout.FillDirection = Enum.FillDirection.Vertical
-    RightLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    RightLayout.Padding = UDim.new(0, 6)
-    
-    local RightPadding = Instance.new("UIPadding", RightColumn)
-    RightPadding.PaddingLeft = UDim.new(0, 5)
-    RightPadding.PaddingRight = UDim.new(0, 5)
-    RightPadding.PaddingTop = UDim.new(0, 5)
-    RightPadding.PaddingBottom = UDim.new(0, 5)
 
     TabButton.MouseButton1Click:Connect(function()
         for _, frame in pairs(UI._tabFrames) do
