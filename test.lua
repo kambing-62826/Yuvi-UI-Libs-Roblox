@@ -695,8 +695,8 @@ makeDraggable(MainFrame, TabHolder)
 
 -- CONTENT FRAME
 local ContentFrame = Instance.new("Frame")
-ContentFrame.Size = UDim2.new(1, 0, 1, -70)
-ContentFrame.Position = UDim2.new(0, 0, 0, 70)
+ContentFrame.Size = UDim2.new(1, -150, 1, -40) 
+ContentFrame.Position = UDim2.new(0, 150, 0, 40)
 ContentFrame.BackgroundTransparency = 1
 ContentFrame.Parent = MainFrame
 
@@ -729,16 +729,16 @@ end)
 
 -- TAB BUTTON HOLDER
 local TabButtonHolder = Instance.new("Frame")
-TabButtonHolder.Size = UDim2.new(1, -10, 0, 35)
-TabButtonHolder.Position = UDim2.new(0, 5, 0, 35)
-TabButtonHolder.BackgroundTransparency = 1
+TabButtonHolder.Size = UDim2.new(0, 150, 1, -40)
+TabButtonHolder.Position = UDim2.new(0, 0, 0, 35)
+TabButtonHolder.BackgroundColor3 = CurrentTheme.HeaderBG
 TabButtonHolder.Parent = MainFrame
 UI._Elements.TabButtonHolder = TabButtonHolder
 
 local TabLayout = Instance.new("UIListLayout", TabButtonHolder)
-TabLayout.FillDirection = Enum.FillDirection.Horizontal
-TabLayout.HorizontalAlignment = Enum.HorizontalAlignment.Left
-TabLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+TabLayout.FillDirection = Enum.FillDirection.Vertical
+TabLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+TabLayout.VerticalAlignment = Enum.VerticalAlignment.Top
 TabLayout.Padding = UDim.new(0, 5)
 
 function UI:createTab(name)
@@ -749,13 +749,20 @@ function UI:createTab(name)
 
     local TabButton = Instance.new("TextButton")
     TabButton.Name = "TabButton_" .. name
-    TabButton.Size = UDim2.new(0, 100, 1, 0)
+    TabButton.Size = UDim2.new(1, -10, 0, 35)
     TabButton.Text = name
     TabButton.TextSize = 14
     TabButton.Font = Enum.Font.GothamBold
     TabButton.TextColor3 = CurrentTheme.TextColor
     TabButton.BackgroundColor3 = CurrentTheme.TabBGInactive
     TabButton.Parent = TabButtonHolder
+    
+    local SideStroke = Instance.new("Frame")
+    SideStroke.Size = UDim2.new(0, 1, 1, 0)
+    SideStroke.Position = UDim2.new(0, 150, 0, 0)
+    SideStroke.BackgroundColor3 = CurrentTheme.Accent
+    SideStroke.BorderSizePixel = 0
+    SideStroke.Parent = MainFrame
 
     local cornerBtn = Instance.new("UICorner", TabButton)
     cornerBtn.CornerRadius = UDim.new(0, 13)
@@ -780,14 +787,14 @@ function UI:createTab(name)
     scale.Name = "ClickScale"
     scale.Scale = 1
 
--- === TAB FRAME ===
-local TabFrame = Instance.new("Frame")
-TabFrame.Name = "TabFrame_" .. name
-TabFrame.Size = UDim2.new(1, -10, 1, -10)
-TabFrame.Position = UDim2.new(0, 5, 0, 5)
-TabFrame.BackgroundTransparency = 1
-TabFrame.Parent = ContentFrame
-TabFrame.Visible = false
+    -- === TAB FRAME ===
+    local TabFrame = Instance.new("Frame")
+    TabFrame.Name = "TabFrame_" .. name
+    TabFrame.Size = UDim2.new(1, -10, 1, -10)
+    TabFrame.Position = UDim2.new(0, 5, 0, 5)
+    TabFrame.BackgroundTransparency = 1
+    TabFrame.Parent = ContentFrame
+    TabFrame.Visible = false
 
     -- SATU SCROLL UTAMA
     local MainScroll = Instance.new("ScrollingFrame")
