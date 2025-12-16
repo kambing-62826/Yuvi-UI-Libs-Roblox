@@ -387,12 +387,15 @@ local function applyTheme(themeName)
     
     --///////////////////--
     if UI._Elements.TabButtonHolder then
-    UI._Elements.TabButtonHolder.BackgroundColor3 = theme.HeaderBG
-    if UI._Elements.TabButtonHolder:FindFirstChild("RightCover") then
-        UI._Elements.TabButtonHolder.RightCover.BackgroundColor3 = theme.HeaderBG
+        local holder = UI._Elements.TabButtonHolder
+        holder.BackgroundColor3 = CurrentTheme.HeaderBG
+        
+        local rc = holder:FindFirstChild("RightCover")
+        if rc then
+            rc.BackgroundColor3 = CurrentTheme.HeaderBG
+        end
     end
-end
-    
+        
     -- Content Elements
     for _, tabFrame in pairs(UI._tabFrames) do
         local mainScroll = tabFrame:FindFirstChild("MainScroll")
@@ -746,29 +749,29 @@ CloseBtn.MouseButton1Click:Connect(function()
     ScreenGui:Destroy()
 end)
 
--- TAB BUTTON HOLDER
+-- === 1. TAB BUTTON HOLDER (SIDEBAR) ===
 local TabButtonHolder = Instance.new("Frame")
--- Lebar 150px, Tinggi: 1 (penuh) dikurangi 35px (tinggi Header)
+TabButtonHolder.Name = "TabButtonHolder"
 TabButtonHolder.Size = UDim2.new(0, 150, 1, -35) 
--- Posisi: Mulai dari X=0, Y=35 (tepat di bawah Header)
 TabButtonHolder.Position = UDim2.new(0, 0, 0, 35) 
 TabButtonHolder.BackgroundColor3 = CurrentTheme.HeaderBG 
-TabButtonHolder.BorderSizePixel = 0 -- Hilangkan outline agar mulus
+TabButtonHolder.BorderSizePixel = 0 
 TabButtonHolder.Parent = MainFrame
+UI._Elements.TabButtonHolder = TabButtonHolder
 
--- MEMBUAT SUDUT MELENGKUNG (OVAL)
+-- Membuat Sidebar Oval (Lengkung)
 local TabCorner = Instance.new("UICorner")
-TabCorner.CornerRadius = UDim.new(0, 12) -- Angka 12 ini sesuaikan dengan kelengkungan MainFrame Anda
+TabCorner.CornerRadius = UDim.new(0, 1) -- Menyamakan dengan MainFrame
 TabCorner.Parent = TabButtonHolder
 
--- Frame ini gunanya menutupi sisi kanan agar tetap lurus (tidak ikut oval)
+-- Menutup sisi kanan sidebar agar tetap lurus (menyatu dengan konten)
 local RightCover = Instance.new("Frame")
 RightCover.Name = "RightCover"
 RightCover.Size = UDim2.new(0, 20, 1, 0)
-RightCover.Position = UDim2.new(1, -20, 0, 0) -- Menempel di pojok kanan sidebar
+RightCover.Position = UDim2.new(1, -20, 0, 0)
 RightCover.BackgroundColor3 = CurrentTheme.HeaderBG
 RightCover.BorderSizePixel = 0
-RightCover.ZIndex = 1 -- Agar berada di bawah teks tombol
+RightCover.ZIndex = 1
 RightCover.Parent = TabButtonHolder
 
 local TabLayout = Instance.new("UIListLayout", TabButtonHolder)
@@ -776,6 +779,28 @@ TabLayout.FillDirection = Enum.FillDirection.Vertical
 TabLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 TabLayout.VerticalAlignment = Enum.VerticalAlignment.Top
 TabLayout.Padding = UDim.new(0, 5)
+
+-- Padding Sidebar agar tombol tidak terlalu mepet ke atas/bawah
+local TabPadding = Instance.new("UIPadding", TabButtonHolder)
+TabPadding.PaddingTop = UDim.new(0, 10)
+TabPadding.PaddingBottom = UDim.new(0, 10)
+
+-- === 2. CONTENT AREA & SEPARATOR ===
+-- local Line = Instance.new("Frame")
+-- Line.Name = "Separator"
+-- Line.Size = UDim2.new(0, 1, 1, -35)
+-- Line.Position = UDim2.new(0, 150, 0, 35) 
+-- Line.BackgroundColor3 = CurrentTheme.Accent
+-- Line.BorderSizePixel = 0
+-- Line.ZIndex = 2
+-- Line.Parent = MainFrame
+
+-- local ContentFrame = Instance.new("Frame")
+-- ContentFrame.Name = "ContentFrame"
+-- ContentFrame.Size = UDim2.new(1, -150, 1, -35) 
+-- ContentFrame.Position = UDim2.new(0, 150, 0, 35) 
+-- ContentFrame.BackgroundTransparency = 1
+-- ContentFrame.Parent = MainFrame
 
 function UI:createTab(name)
     if UI._tabs[name] then
@@ -831,11 +856,6 @@ function UI:createTab(name)
     TabFrame.BackgroundTransparency = 1
     TabFrame.Parent = ContentFrame
     TabFrame.Visible = false
-    
-    -- Tambahkan ini di dalam UI:createTab agar tombol rapi
-    local TabPadding = Instance.new("UIPadding", TabButtonHolder)
-    TabPadding.PaddingLeft = UDim.new(0, 10) -- Geser tombol 10px ke kanan
-    TabPadding.PaddingTop = UDim.new(0, 10)
 
     -- SATU SCROLL UTAMA
     local MainScroll = Instance.new("ScrollingFrame")
