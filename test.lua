@@ -729,7 +729,7 @@ end)
 
 -- TAB BUTTON HOLDER
 local TabButtonHolder = Instance.new("Frame")
-TabButtonHolder.Size = UDim2.new(0, 150, 1, -40)
+TabButtonHolder.Size = UDim2.new(0, 145, 1, -40)
 TabButtonHolder.Position = UDim2.new(0, 0, 0, 35)
 TabButtonHolder.BackgroundColor3 = CurrentTheme.HeaderBG
 TabButtonHolder.Parent = MainFrame
