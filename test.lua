@@ -695,10 +695,21 @@ makeDraggable(MainFrame, TabHolder)
 
 -- CONTENT FRAME
 local ContentFrame = Instance.new("Frame")
-ContentFrame.Size = UDim2.new(1, -150, 1, -40) 
-ContentFrame.Position = UDim2.new(0, 150, 0, 40)
+-- Lebar: 1 (penuh) dikurangi 150px (lebar sidebar)
+-- Tinggi: 1 (penuh) dikurangi 35px (tinggi Header)
+ContentFrame.Size = UDim2.new(1, -150, 1, -35) 
+-- Posisi: Geser ke kanan 150px, turun ke bawah 35px
+ContentFrame.Position = UDim2.new(0, 150, 0, 35) 
 ContentFrame.BackgroundTransparency = 1
 ContentFrame.Parent = MainFrame
+
+local Line = Instance.new("Frame")
+Line.Name = "Separator"
+Line.Size = UDim2.new(0, 1, 1, 0) -- Garis tipis 1 pixel
+Line.Position = UDim2.new(0, 150, 0, 0) -- Di ujung kanan sidebar
+Line.BackgroundColor3 = CurrentTheme.Accent -- Gunakan warna tema
+Line.BorderSizePixel = 0
+Line.Parent = TabButtonHolder
 
 local PopupBtn = Instance.new("TextButton")
 PopupBtn.Size = UDim2.new(0, 100, 0, 30)
@@ -729,11 +740,13 @@ end)
 
 -- TAB BUTTON HOLDER
 local TabButtonHolder = Instance.new("Frame")
-TabButtonHolder.Size = UDim2.new(0, 150, 1, -40)
-TabButtonHolder.Position = UDim2.new(0, 0, 0, 35)
-TabButtonHolder.BackgroundColor3 = 0
+-- Lebar 150px, Tinggi: 1 (penuh) dikurangi 35px (tinggi Header)
+TabButtonHolder.Size = UDim2.new(0, 150, 1, -35) 
+-- Posisi: Mulai dari X=0, Y=35 (tepat di bawah Header)
+TabButtonHolder.Position = UDim2.new(0, 0, 0, 35) 
+TabButtonHolder.BackgroundColor3 = CurrentTheme.HeaderBG 
+TabButtonHolder.BorderSizePixel = 0 -- Hilangkan outline agar mulus
 TabButtonHolder.Parent = MainFrame
-UI._Elements.TabButtonHolder = TabButtonHolder
 
 local TabLayout = Instance.new("UIListLayout", TabButtonHolder)
 TabLayout.FillDirection = Enum.FillDirection.Vertical
